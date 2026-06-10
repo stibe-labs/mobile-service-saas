@@ -1,0 +1,11 @@
+{
+  "name": "mobile-service-shop",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node test_runner.js",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "npm run dev:backend & npm run dev:frontend"
+  }
+}

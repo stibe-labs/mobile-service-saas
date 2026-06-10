@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Service Shop – Simplified System Flowchart (v2.0)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #4f6df5; --blue-l: #e8edff;
+            --purple: #7c5cfc; --purple-l: #ede8ff;
+            --green: #22c55e; --green-l: #e6f9ed;
+            --amber: #f59e0b; --amber-l: #fef7e0;
+            --rose: #ef4444; --rose-l: #fde8e8;
+            --cyan: #06b6d4; --cyan-l: #e0f7fa;
+            --orange: #f97316; --orange-l: #fff3e6;
+            --pink: #ec4899; --pink-l: #fde8f4;
+            --g50:#f9fafb; --g100:#f3f4f6; --g200:#e5e7eb; --g300:#d1d5db;
+            --g400:#9ca3af; --g500:#6b7280; --g600:#4b5563; --g700:#374151; --g800:#1f2937; --g900:#111827;
+            --lc: #94a3b8;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Inter',sans-serif;background:#fff;color:var(--g800);padding:40px 20px 80px;}
+
+        .title{text-align:center;margin-bottom:30px;}
+        .title h1{font-size:1.5rem;font-weight:800;color:var(--g900);}
+        .title p{font-size:0.82rem;color:var(--g500);margin-top:6px;}
+        .title .meta{display:inline-flex;gap:16px;margin-top:10px;font-size:0.72rem;color:var(--g400);}
+        .title .badge{display:inline-block;margin-top:12px;background:var(--green-l);border:1.5px solid var(--green);color:#15803d;font-size:0.7rem;font-weight:700;padding:4px 14px;border-radius:50px;}
+
+        .canvas{max-width:1300px;margin:0 auto;}
+
+        /* Section groups */
+        .sg{border:2px dashed var(--g200);border-radius:14px;padding:28px 24px 24px;position:relative;background:var(--g50);}
+        .sg > .gl{position:absolute;top:-12px;left:24px;background:#fff;padding:2px 14px;font-size:0.72rem;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:1.2px;border-radius:6px;border:1px solid var(--g200);}
+
+        /* Nodes */
+        .n{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 18px;border-radius:10px;font-size:0.78rem;font-weight:600;border:2px solid;background:#fff;position:relative;line-height:1.4;}
+        .n .sub{font-size:0.68rem;font-weight:400;color:var(--g500);margin-top:2px;}
+        .n.pill{border-radius:50px;padding:10px 26px;font-weight:700;}
+        .n.sm{font-size:0.72rem;padding:7px 12px;}
+        .n.xs{font-size:0.66rem;padding:5px 10px;border-width:1.5px;}
+        .n.blue{border-color:var(--blue);color:var(--blue);background:var(--blue-l);}
+        .n.purple{border-color:var(--purple);color:var(--purple);background:var(--purple-l);}
+        .n.green{border-color:var(--green);color:#15803d;background:var(--green-l);}
+        .n.amber{border-color:var(--amber);color:#b45309;background:var(--amber-l);}
+        .n.rose{border-color:var(--rose);color:var(--rose);background:var(--rose-l);}
+        .n.cyan{border-color:var(--cyan);color:#0e7490;background:var(--cyan-l);}
+        .n.orange{border-color:var(--orange);color:#c2410c;background:var(--orange-l);}
+        .n.pink{border-color:var(--pink);color:#be185d;background:var(--pink-l);}
+        .n.gray{border-color:var(--g300);color:var(--g600);background:var(--g100);}
+
+        /* Screen detail box */
+        .screen{background:#fff;border:1.5px solid var(--g200);border-radius:10px;padding:10px 12px;text-align:left;width:100%;}
+        .screen .st{font-size:0.7rem;font-weight:700;color:var(--g700);margin-bottom:5px;}
+        .screen ul{list-style:none;padding:0;}
+        .screen ul li{font-size:0.68rem;color:var(--g600);padding:2px 0 2px 12px;position:relative;line-height:1.45;}
+        .screen ul li::before{content:'›';position:absolute;left:0;color:var(--g400);font-weight:700;}
+        .screen.bl{border-left:3px solid var(--blue);}
+        .screen.pl{border-left:3px solid var(--purple);}
+        .screen.gl{border-left:3px solid var(--green);}
+        .screen.al{border-left:3px solid var(--amber);}
+        .screen.rl{border-left:3px solid var(--rose);}
+        .screen.cl{border-left:3px solid var(--cyan);}
+        .screen.ol{border-left:3px solid var(--orange);}
+
+        /* Diamond */
+        .dw{display:flex;justify-content:center;align-items:center;}
+        .dia{width:130px;height:85px;position:relative;display:flex;align-items:center;justify-content:center;}
+        .dia::before{content:'';position:absolute;inset:0;background:var(--amber-l);border:2px solid var(--amber);transform:rotate(45deg);border-radius:7px;}
+        .dia span{position:relative;z-index:1;font-size:0.72rem;font-weight:700;color:#b45309;text-align:center;line-height:1.3;}
+
+        /* Arrows */
+        .ad{display:block;width:2px;height:32px;background:var(--lc);position:relative;margin:0 auto;}
+        .ad::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--lc);}
+        .ad.s{height:18px;} .ad.t{height:44px;} .ad.xs{height:12px;}
+
+        /* Layout helpers */
+        .center{display:flex;justify-content:center;align-items:center;}
+        .col{display:flex;flex-direction:column;align-items:center;}
+
+        /* === CARD ROW: Flexbox layout === */
+        .card-row{
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            align-items:flex-start;
+            gap:16px;
+            width:100%;
+        }
+        .card-col{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            flex: 1 1 200px;
+            max-width:280px;
+        }
+        .card-col .screen{width:100%;text-align:left;}
+        .card-col.compact{
+            flex:0 1 180px;
+            max-width:180px;
+        }
+        .screen.compact{padding:8px 10px;}
+        .screen.compact .st{font-size:0.66rem;margin-bottom:4px;}
+        .screen.compact ul li{font-size:0.63rem;line-height:1.35;}
+
+        /* Label tags */
+        .tag{font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;display:inline-block;}
+        .tag.yes{background:var(--green-l);color:#15803d;}
+        .tag.no{background:var(--rose-l);color:var(--rose);}
+        .tag.admin{background:var(--purple-l);color:var(--purple);}
+        .tag.branch{background:var(--cyan-l);color:#0e7490;}
+
+        /* Status nodes */
+        .sn{padding:7px 14px;border-radius:8px;font-size:0.7rem;font-weight:600;border:2px solid;background:#fff;white-space:nowrap;display:inline-block;}
+        .sn.s1{border-color:var(--blue);color:var(--blue);background:var(--blue-l);}
+        .sn.s2{border-color:var(--amber);color:#b45309;background:var(--amber-l);}
+        .sn.s3{border-color:var(--orange);color:#c2410c;background:var(--orange-l);}
+        .sn.s4{border-color:var(--green);color:#15803d;background:var(--green-l);}
+        .sn.s5{border-color:var(--purple);color:var(--purple);background:var(--purple-l);}
+        .sn.s6{border-color:var(--rose);color:var(--rose);background:var(--rose-l);}
+        .sa{display:inline-block;width:24px;height:2px;background:var(--lc);position:relative;vertical-align:middle;}
+        .sa::after{content:'';position:absolute;right:-4px;top:50%;transform:translateY(-50%);border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:5px solid var(--lc);}
+
+        /* Important rule */
+        .imp{background:var(--rose-l);border:2px solid var(--rose);border-radius:8px;padding:10px 14px;font-size:0.72rem;color:var(--rose);font-weight:500;text-align:left;max-width:460px;line-height:1.5;margin:0 auto;}
+        .imp strong{font-weight:700;}
+
+        /* Feature toggle table */
+        .toggle-table{width:100%;border-collapse:collapse;font-size:0.68rem;margin-top:8px;}
+        .toggle-table th{background:var(--purple-l);color:var(--purple);padding:6px 10px;text-align:left;font-weight:700;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.5px;}
+        .toggle-table td{padding:5px 10px;border-bottom:1px solid var(--g200);color:var(--g600);}
+        .toggle-table .on{color:#15803d;font-weight:600;}
+        .toggle-table .off{color:var(--rose);font-weight:600;}
+
+        /* Removed feature callout */
+        .removed{background:var(--g100);border:2px dashed var(--g300);border-radius:10px;padding:14px 18px;margin-top:20px;max-width:600px;}
+        .removed .rt{font-size:0.72rem;font-weight:700;color:var(--g500);margin-bottom:6px;}
+        .removed .ri{display:flex;flex-wrap:wrap;gap:6px;}
+        .removed .ri span{font-size:0.65rem;background:var(--rose-l);color:var(--rose);padding:3px 10px;border-radius:4px;font-weight:600;text-decoration:line-through;}
+
+        /* Reference section */
+        .ref-section{border:2px solid var(--g200);border-radius:14px;padding:24px;margin-top:40px;background:#fff;}
+        .ref-section h3{font-size:0.9rem;font-weight:700;color:var(--g700);margin-bottom:14px;}
+        .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+        .ref-item{background:var(--g50);border:1px solid var(--g200);border-radius:8px;padding:10px 14px;}
+        .ref-item .rl{font-size:0.68rem;color:var(--g400);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:600;}
+        .ref-item .rv{font-size:0.82rem;font-weight:600;color:var(--g700);}
+
+        .cn{font-size:0.68rem;color:var(--g400);font-style:italic;text-align:center;margin-top:4px;}
+        .note{font-size:0.68rem;color:var(--g400);text-align:center;}
+        .sp{height:16px;} /* spacer */
+
+        .flex-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;align-items:flex-start;}
+        .flex-row .col{flex:1;min-width:200px;max-width:280px;}
+
+        @media print{body{padding:15px;font-size:10px;}.sg{break-inside:avoid;page-break-inside:avoid;}}
+        @media(max-width:800px){.card-row{flex-direction:column;align-items:center;}.card-col{max-width:100%;}}
+    </style>
+</head>
+<body>
+
+<div class="title">
+    <h1>📱 Mobile Service Shop — Simplified System Flow Diagram</h1>
+    <p>MVP scope — digital job-card management, service tracking &amp; Super Admin control layer</p>
+    <div class="badge">✨ Simplified MVP — v2.0</div>
+    <div class="meta"><span>Type: System Flow Diagram</span><span>|</span><span>v2.0</span><span>|</span><span>June 2026</span></div>
+</div>
+
+<div class="canvas">
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 1 — LOGIN & AUTHENTICATION           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg" style="margin-top:20px;">
+    <div class="gl">Flow 1 — Login &amp; Authentication</div>
+    <div class="col">
+        <div class="n blue pill">🌐 User Opens Application</div>
+        <div class="ad"></div>
+        <div class="n blue">🔐 Login Page<div class="sub">Enter Username &amp; Password</div></div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Valid<br>Credentials?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:600px;margin:0 auto;">
+            <div class="card-col">
+                <div class="tag no">✗ NO</div>
+                <div class="ad xs"></div>
+                <div class="n rose sm">Show Error Message</div>
+                <div class="cn">↩ Return to Login</div>
+            </div>
+            <div class="card-col">
+                <div class="tag yes">✓ YES</div>
+                <div class="ad xs"></div>
+                <div class="n green sm">Auth Success</div>
+                <div class="ad xs"></div>
+                <div class="dw"><div class="dia" style="width:110px;height:72px;"><span>User<br>Role?</span></div></div>
+                <div class="sp"></div>
+                <div class="card-row">
+                    <div class="card-col">
+                        <div class="tag admin">SUPER ADMIN</div>
+                        <div class="ad xs"></div>
+                        <div class="n purple sm">👑 Super Admin Dashboard</div>
+                        <div class="cn">→ See Flow 2</div>
+                    </div>
+                    <div class="card-col">
+                        <div class="tag branch">TENANT USER</div>
+                        <div class="ad xs"></div>
+                        <div class="n cyan sm">🏪 Tenant Dashboard</div>
+                        <div class="cn">→ See Flow 3</div>
+                    </div>
+                    <div class="card-col">
+                        <div class="tag" style="background:var(--orange-l);color:var(--orange);">TECHNICIAN</div>
+                        <div class="ad xs"></div>
+                        <div class="n orange sm">🛠️ Technician Dashboard</div>
+                        <div class="cn">→ See Flow 9</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 2 — SUPER ADMIN NAVIGATION           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 2 — Super Admin: Dashboard &amp; Controls</div>
+    <div class="col">
+        <div class="n purple">👑 Super Admin Dashboard<div class="sub">Platform-level owner — manages all tenants</div></div>
+        <div class="note">Super Admin sees sidebar/menu with these options ↓</div>
+        <div class="ad s"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n purple sm">📊 Dashboard Home</div>
+                <div class="ad xs"></div>
+                <div class="screen pl">
+                    <div class="st">Overview Panel</div>
+                    <ul>
+                        <li>List of all registered tenants</li>
+                        <li>Active users per tenant</li>
+                        <li>Tenant account status (Active / Suspended)</li>
+                        <li>Casual summary view</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n purple sm">🏢 Tenant Management</div>
+                <div class="ad xs"></div>
+                <div class="screen pl">
+                    <div class="st">Manage Tenants &amp; Users</div>
+                    <ul>
+                        <li>Approve / reject new tenant registrations</li>
+                        <li>Set max user accounts per tenant</li>
+                        <li>Suspend or reactivate tenant</li>
+                        <li>Reset tenant user passwords</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n purple sm">🎛️ Feature Toggles</div>
+                <div class="ad xs"></div>
+                <div class="screen pl">
+                    <div class="st">Per-Tenant Feature Controls</div>
+                    <ul>
+                        <li>Enable / disable features per tenant</li>
+                        <li>Hiding a feature removes the UI button</li>
+                        <li>No data is deleted when toggled off</li>
+                        <li>See toggle table below ↓</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 2A below</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 2A — FEATURE TOGGLE DETAIL            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 2A — Super Admin: Feature Toggle Controls (Per Tenant)</div>
+    <div class="col">
+        <div class="n purple">🎛️ Feature Toggle Settings<div class="sub">Super Admin selects a tenant → controls which features are visible</div></div>
+        <div class="ad s"></div>
+
+        <div style="max-width:600px;width:100%;background:#fff;border:1.5px solid var(--g200);border-radius:10px;padding:14px 16px;">
+            <table class="toggle-table">
+                <thead>
+                    <tr>
+                        <th>Feature / Button</th>
+                        <th>Controlled By</th>
+                        <th>Default</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Add New Service (Job Card)</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Add New Part</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Add New Device Model</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Service Status Update</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Parts Management Module</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Printable Job Card</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Printable Service Receipt</td><td>Super Admin</td><td class="off">⛔ Disabled</td></tr>
+                    <tr><td>Branch Dashboard Access</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp" style="max-width:520px;">
+            <strong>💡 How It Works:</strong> Disabling a feature hides the button/section from that tenant's users. No data is deleted — it can be re-enabled at any time.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 3 — TENANT USER NAVIGATION           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 3 — Tenant User: Navigation &amp; Routes</div>
+    <div class="col">
+        <div class="n cyan">🏪 Tenant User Dashboard<div class="sub">Sees only their own shop data</div></div>
+        <div class="note">Tenant user sees sidebar/menu with these options ↓</div>
+        <div class="note" style="color:var(--purple);font-weight:600;font-size:0.65rem;">⚠️ Buttons/sections hidden if disabled by Super Admin via Feature Toggle</div>
+        <div class="ad s"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n cyan sm">📊 Dashboard</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">Shop Overview</div>
+                    <ul>
+                        <li>Today's open jobs count</li>
+                        <li>Completed jobs count</li>
+                        <li>Pending jobs list</li>
+                        <li>Quick access: Add New Service</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan sm">➕ Add Service</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">New Job Card Form</div>
+                    <ul>
+                        <li>Enter customer name</li>
+                        <li>Enter phone number</li>
+                        <li>Select brand &amp; model</li>
+                        <li>Enter IMEI number</li>
+                        <li>Describe problem</li>
+                        <li>Assign technician (free text)</li>
+                        <li>Auto: serial, date, branch</li>
+                        <li>Click "Save" → created</li>
+                    </ul>
+                </div>
+                <div class="cn">→ Goes to Service Detail (Flow 4)</div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan sm">📋 Service List</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">Service List (Own Shop)</div>
+                    <ul>
+                        <li>See all jobs in shop</li>
+                        <li>Filter by status</li>
+                        <li>Search name/phone/IMEI</li>
+                        <li>Filter by date range</li>
+                        <li>Search by job card number</li>
+                        <li>Click job → Detail page</li>
+                    </ul>
+                </div>
+                <div class="cn">→ Click → Service Detail (Flow 4)</div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <!-- ROW 2 -->
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n cyan sm">🔩 Parts</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">Parts Management</div>
+                    <ul>
+                        <li>View parts catalogue</li>
+                        <li>Add new part</li>
+                        <li>Update cost price</li>
+                        <li>Update selling price</li>
+                        <li>Set compatible models</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 7</div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan sm">📱 Device Models</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">Manage Brands &amp; Models</div>
+                    <ul>
+                        <li>View brand &amp; model list</li>
+                        <li>Add new brand</li>
+                        <li>Add model under brand</li>
+                        <li>Edit / delete models</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 8</div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan sm">🏢 Sub-Branches</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">Manage Branches</div>
+                    <ul>
+                        <li>View sub-branches list</li>
+                        <li>Add new sub-branch</li>
+                        <li>Edit sub-branch details</li>
+                        <li>Access restricted to Main Branch</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan sm">🛠️ Technicians</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <div class="st">Manage Technicians</div>
+                    <ul>
+                        <li>View technicians list</li>
+                        <li>Add new technician</li>
+                        <li><strong>Set Username & Password</strong></li>
+                        <li>Assign to job cards</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 4 — SERVICE DETAIL PAGE               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 4 — Service Detail Page: What User Can Do Here</div>
+    <div class="col">
+        <div class="n green">📋 Service Detail / Update Page<div class="sub">Reached from: Add Service OR clicking a job in Service List</div></div>
+        <div class="note">This page shows job card info and offers these actions ↓</div>
+        <div class="ad s"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n green sm">👁️ View Info</div>
+                <div class="ad xs"></div>
+                <div class="screen gl">
+                    <div class="st">Job Card Details</div>
+                    <ul>
+                        <li>Serial Number</li>
+                        <li>Customer Name &amp; Phone</li>
+                        <li>Brand / Model / IMEI</li>
+                        <li>Problem Description</li>
+                        <li>Received Date</li>
+                        <li>Assigned Technician</li>
+                        <li>Current Status</li>
+                        <li>Service History log</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n green sm">🔄 Update Status</div>
+                <div class="ad xs"></div>
+                <div class="screen gl">
+                    <div class="st">Change Status</div>
+                    <ul>
+                        <li>Select new status:</li>
+                        <li>&nbsp; Received → Checking</li>
+                        <li>&nbsp; Checking → Waiting</li>
+                        <li>&nbsp; Waiting → Repaired</li>
+                        <li>&nbsp; Repaired → Delivered</li>
+                        <li>&nbsp; Any → Cancelled</li>
+                        <li>Click "Update" → saved</li>
+                        <li>→ Logged in service history</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col" style="max-width:320px;flex:1 1 280px;">
+                <div class="n green sm">🔩 Add Parts Used</div>
+                <div class="ad xs"></div>
+                <div class="screen gl">
+                    <div class="st">Parts Source Selection</div>
+                    <ul>
+                        <li><strong>Option A: Shop Part</strong></li>
+                        <li>&nbsp; Search / select from catalogue</li>
+                        <li>&nbsp; Auto-fill cost &amp; selling price</li>
+                        <li>&nbsp; ⚠️ Cost locked at this time</li>
+                        <li style="padding-top:4px;"><strong>Option B: Outside Purchase</strong></li>
+                        <li>&nbsp; Select "Purchased from Outside"</li>
+                        <li>&nbsp; Enter part name manually</li>
+                        <li>&nbsp; Enter cost of the product</li>
+                        <li style="padding-top:4px;">Enter quantity</li>
+                        <li>Click "Add" → attached to job</li>
+                        <li>Can add multiple parts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <!-- ROW 2 -->
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n green sm">📝 Add Notes</div>
+                <div class="ad xs"></div>
+                <div class="screen gl">
+                    <div class="st">Notes Section</div>
+                    <ul>
+                        <li>Technician repair notes</li>
+                        <li>What was fixed/repaired</li>
+                        <li>Customer approval notes</li>
+                        <li>Update delivery date</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col compact">
+                <div class="n green sm">🖨️ Print</div>
+                <div class="ad xs"></div>
+                <div class="screen gl compact">
+                    <div class="st">Print Options</div>
+                    <ul>
+                        <li>Print Job Card</li>
+                        <li>Print Service Receipt</li>
+                    </ul>
+                </div>
+                <div class="cn">If enabled by Super Admin</div>
+            </div>
+            <div class="card-col"></div><!-- empty col for alignment -->
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 5 — COMPLETE SERVICE LIFECYCLE        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 5 — Complete Service Lifecycle (Business Process)</div>
+    <div class="col">
+        <div class="note" style="margin-bottom:10px;">This shows how a single repair job moves from start to finish</div>
+
+        <div class="n blue pill">📱 Customer Brings Device</div>
+        <div class="ad"></div>
+        <div class="n cyan sm">Tenant User → Click "Add Service"</div>
+        <div class="ad"></div>
+        <div class="n green">📋 Fill Job Card Form<div class="sub">Name, Phone, Brand, IMEI, Problem</div></div>
+        <div class="ad"></div>
+        <div class="n green sm">Click "Save"</div>
+        <div class="ad"></div>
+        <div class="sn s1">📥 Status: Received</div>
+        <div class="ad"></div>
+        <div class="n cyan sm">Technician Checks Device</div>
+        <div class="ad"></div>
+        <div class="sn s2">🔍 Status: Checking</div>
+        <div class="ad"></div>
+
+        <div class="dw"><div class="dia"><span>Parts<br>Needed?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:500px;margin:0 auto;">
+            <div class="card-col">
+                <div class="tag yes">YES</div>
+                <div class="ad xs"></div>
+                <div class="sn s3">⏳ Waiting for Parts</div>
+                <div class="ad xs"></div>
+                <div class="n gray xs">Parts Arrive</div>
+                <div class="ad xs"></div>
+                <div class="n green sm">Add Parts to Job<div class="sub">Shop part or outside purchase · cost locked now</div></div>
+                <div class="cn">↓ Continue to repair</div>
+            </div>
+            <div class="card-col">
+                <div class="tag no">NO</div>
+                <div class="ad xs"></div>
+                <div class="n green sm">Repair Directly</div>
+                <div class="cn">↓ Continue to repair</div>
+            </div>
+        </div>
+
+        <div class="ad"></div>
+        <div class="n green sm">Add Repair Notes<div class="sub">Technician notes &amp; customer approval</div></div>
+        <div class="ad"></div>
+        <div class="sn s4">✅ Status: Repaired</div>
+        <div class="ad"></div>
+        <div class="n gray xs">Notify Customer</div>
+        <div class="ad"></div>
+        <div class="n blue pill">Customer Comes to Collect</div>
+        <div class="ad"></div>
+        <div class="n green sm">Print Job Card / Receipt</div>
+        <div class="cn">If print enabled by Super Admin</div>
+        <div class="ad"></div>
+        <div class="sn s5">📦 Status: Delivered</div>
+        <div class="ad xs"></div>
+        <div class="n green pill">✅ Job Complete</div>
+
+        <div style="margin-top:24px;padding:12px 16px;border:2px dashed var(--rose);border-radius:10px;background:var(--rose-l);max-width:400px;">
+            <div style="font-size:0.75rem;font-weight:700;color:var(--rose);margin-bottom:4px;">❌ Cancellation Path</div>
+            <div style="font-size:0.7rem;color:var(--g600);line-height:1.5;">
+                At <strong>any stage</strong> above, user can click "Cancel Service"<br>
+                → Enter cancellation reason<br>
+                → Status changes to <strong>Cancelled</strong><br>
+                → Job archived
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 6 — SEARCH & LOOKUP                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 6 — Search &amp; Lookup Flow</div>
+    <div class="col">
+        <div class="n blue">🔍 User Clicks Search</div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Search<br>By?</span></div></div>
+        <div class="sp"></div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+            <div class="n blue xs">Customer Name</div>
+            <div class="n blue xs">Phone Number</div>
+            <div class="n blue xs">IMEI Number</div>
+            <div class="n blue xs">Job Card No.</div>
+            <div class="n blue xs">Date Range</div>
+            <div class="n blue xs">Service Status</div>
+        </div>
+
+        <div class="ad"></div>
+        <div class="n gray sm">Show Matching Results</div>
+        <div class="ad"></div>
+        <div class="n green sm">Click Result → Go to Service Detail</div>
+        <div class="cn">→ See Flow 4</div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 7 — PARTS MANAGEMENT                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 7 — Parts Management Flow</div>
+    <div class="col">
+        <div class="n cyan">🔩 Tenant User Opens Parts Page</div>
+        <div class="ad"></div>
+        <div class="n gray sm">View Parts Catalogue List</div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Action?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:500px;margin:0 auto;">
+            <div class="card-col">
+                <div class="n cyan xs">➕ Add New Part</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <ul>
+                        <li>Enter part name</li>
+                        <li>Enter cost price</li>
+                        <li>Enter selling price</li>
+                        <li>Select compatible models</li>
+                        <li>Click "Save"</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan xs">✏️ Edit Part</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <ul>
+                        <li>Update cost price</li>
+                        <li>Update selling price</li>
+                        <li>Update compatible models</li>
+                        <li>Click "Save"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp" style="max-width:520px;">
+            <strong>⚠️ Critical Rule:</strong> When a part is used in a job, the <strong>cost at that time</strong> is saved with the service record. Future price changes do <strong>NOT</strong> affect historical records.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 8 — DEVICE MODELS                    -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 8 — Device Model Management Flow</div>
+    <div class="col">
+        <div class="n cyan">📱 Tenant User Opens Device Models Page</div>
+        <div class="ad"></div>
+        <div class="n gray sm">View Brands &amp; Models List</div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Action?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:600px;margin:0 auto;">
+            <div class="card-col">
+                <div class="n cyan xs">➕ Add Brand</div>
+                <div class="ad xs"></div>
+                <div class="n gray xs">Enter brand name → Save</div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan xs">➕ Add Model</div>
+                <div class="ad xs"></div>
+                <div class="screen cl">
+                    <ul>
+                        <li>Select brand</li>
+                        <li>Enter model name</li>
+                        <li>Click "Save"</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n cyan xs">✏️ Edit / ❌ Delete</div>
+                <div class="ad xs"></div>
+                <div class="n gray xs">Modify or remove model</div>
+            </div>
+        </div>
+
+        <div style="margin-top:16px;font-size:0.72rem;color:var(--g500);text-align:center;">
+            <strong>Supported Brands:</strong> Apple · Samsung · Xiaomi · Vivo · Oppo · Other
+        </div>
+        <div class="cn">Models appear as dropdown options in "Add Service" form (Flow 3 → Add Service)</div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 9 — TECHNICIAN DASHBOARD              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg">
+    <div class="gl">Flow 9 — Technician Dashboard Flow</div>
+    <div class="col">
+        <div class="n orange">🛠️ Technician Logs In</div>
+        <div class="ad"></div>
+        <div class="n gray sm">View Dashboard</div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Action?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:500px;margin:0 auto;">
+            <div class="card-col">
+                <div class="n orange xs">📋 View Assigned Works</div>
+                <div class="ad xs"></div>
+                <div class="screen ol">
+                    <ul>
+                        <li>See only assigned job cards</li>
+                        <li>View customer & device problem</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n orange xs">🔄 Update Status</div>
+                <div class="ad xs"></div>
+                <div class="screen ol">
+                    <ul>
+                        <li>Update job status (e.g. Repaired)</li>
+                        <li>Add technician repair notes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp" style="max-width:520px;">
+            <strong>⚠️ Critical Rule:</strong> Technicians CANNOT see other technicians' work, cannot see financial data, and cannot create new job cards.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  REMOVED FEATURES (v1.0 → v2.0)            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg" style="border-color:var(--rose);background:var(--rose-l);opacity:0.85;">
+    <div class="gl" style="background:var(--rose-l);border-color:var(--rose);color:var(--rose);">Removed in v2.0 (From v1.0)</div>
+    <div class="col">
+        <div class="note" style="color:var(--rose);font-weight:600;font-size:0.75rem;margin-bottom:10px;">These features have been removed from the MVP to simplify the project</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;">
+            <div class="n rose xs" style="text-decoration:line-through;">💰 Auto Profit Calculation</div>
+            <div class="n rose xs" style="text-decoration:line-through;">📈 Sales / Revenue Tracking</div>
+            <div class="n rose xs" style="text-decoration:line-through;">💳 Cash / Bank / Credit Split</div>
+            <div class="n rose xs" style="text-decoration:line-through;">📊 Branch-wise Profit Reports</div>
+            <div class="n rose xs" style="text-decoration:line-through;">👨‍🔧 Technician Performance Report</div>
+            <div class="n rose xs" style="text-decoration:line-through;">🔩 Parts Usage Report</div>
+            <div class="n rose xs" style="text-decoration:line-through;">📊 Excel Export</div>
+            <div class="n rose xs" style="text-decoration:line-through;">📄 PDF Export</div>
+            <div class="n rose xs" style="text-decoration:line-through;">💾 Data Backup Module</div>
+            <div class="n rose xs" style="text-decoration:line-through;">🛡️ Audit Log</div>
+            <div class="n rose xs" style="text-decoration:line-through;">📋 Daily Closing Report</div>
+            <div class="n rose xs" style="text-decoration:line-through;">💵 Add Charges (Labor/Expenses)</div>
+            <div class="n rose xs" style="text-decoration:line-through;">💳 Record Payment</div>
+        </div>
+        <div class="cn" style="margin-top:12px;color:var(--g500);">These can be re-added in a future phase once the core service tracking workflow is stable.</div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  REFERENCE SECTION                           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="ref-section">
+    <h3>📌 Reference Information (Not Part of Flow)</h3>
+
+    <div style="display:flex;gap:30px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:280px;">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">Recommended Technology Stack</div>
+            <div class="ref-grid">
+                <div class="ref-item"><div class="rl">Frontend</div><div class="rv">React.js / Next.js</div></div>
+                <div class="ref-item"><div class="rl">Backend</div><div class="rv">Node.js / Django</div></div>
+                <div class="ref-item"><div class="rl">Database</div><div class="rv">PostgreSQL / Supabase</div></div>
+                <div class="ref-item"><div class="rl">Auth</div><div class="rv">JWT-based (Role-aware)</div></div>
+                <div class="ref-item"><div class="rl">Hosting</div><div class="rv">Cloud-based Deployment</div></div>
+            </div>
+        </div>
+
+        <div style="flex:1;min-width:280px;">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">MVP Screens (10 Screens)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <div class="n blue xs">① Login</div>
+                <div class="n purple xs">② Super Admin Dashboard</div>
+                <div class="n purple xs">③ Tenant Management</div>
+                <div class="n purple xs">④ Feature Toggles</div>
+                <div class="n cyan xs">⑤ Tenant Dashboard</div>
+                <div class="n green xs">⑥ Add Service</div>
+                <div class="n green xs">⑦ Service List</div>
+                <div class="n green xs">⑧ Service Detail</div>
+                <div class="n cyan xs">⑨ Parts Mgmt</div>
+                <div class="n cyan xs">⑩ Device Models</div>
+                <div class="n cyan xs">⑪ Sub-Branches</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:20px;">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">User Roles</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:240px;background:var(--purple-l);border:1.5px solid var(--purple);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:var(--purple);margin-bottom:4px;">👑 Super Admin</div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Platform owner — full control over tenants, feature toggles, user quotas, account approvals</div>
+            </div>
+            <div style="flex:1;min-width:240px;background:var(--cyan-l);border:1.5px solid var(--cyan);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#0e7490;margin-bottom:4px;">🏪 Tenant Admin (Main Branch)</div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Shop owner/manager — create jobs, manage parts &amp; models, own shop data only. Can manage sub-branches.</div>
+            </div>
+            <div style="flex:1;min-width:240px;background:var(--green-l);border:1.5px solid var(--green);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#15803d;margin-bottom:4px;">🏢 Sub-Branch User</div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Branch staff — restricted to viewing and managing jobs only for their specific branch. Cannot manage other branches.</div>
+            </div>
+            <div style="flex:1;min-width:240px;background:var(--orange-l);border:1.5px solid var(--orange);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#c2410c;margin-bottom:4px;">🛠️ Technician User</div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Technician staff — restricted strictly to viewing their assigned jobs and updating status/notes. Cannot create jobs.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div><!-- /canvas -->
+</body>
+</html>
