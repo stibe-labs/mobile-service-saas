@@ -15,7 +15,7 @@ const bcrypt = require('bcrypt');
     console.log('Reset branch2 password to admin123');
     
     // Reset Super Admin (just in case)
-    await query("UPDATE users SET password_hash = $1 WHERE username = 'superadmin'", [hash]);
+    await query("UPDATE users SET password_hash = $1 WHERE email = 'stibe@superadmin'", [hash]);
     console.log('Reset superadmin password to admin123');
     
     process.exit(0);

@@ -15,6 +15,12 @@ const VALID_FEATURES = [
   'printable_job_card',
   'printable_receipt',
   'branch_dashboard',
+  'sales_module',
+  'inventory_module',
+  'branch_pricing',
+  'staff_commission',
+  'sales_receipt',
+  'imei_lookup'
 ];
 
 const featureGate = (featureName) => {

@@ -5,10 +5,10 @@ const { featureGate } = require('../middleware/featureGate');
 
 const router = express.Router();
 
-router.use(authenticate, requireRole('tenant_admin', 'branch_user'));
+router.use(authenticate, requireRole('tenant_admin', 'main_branch_manager', 'sub_branch_manager', 'sales_staff', 'branch_user'));
 
 const getTargetBranchId = (req, bodyBranchId) => {
-  if (req.user.role === 'branch_user') {
+  if (['branch_user', 'sub_branch_manager', 'sales_staff'].includes(req.user.role)) {
     return req.user.branchId;
   }
   return bodyBranchId || null;
@@ -89,7 +89,7 @@ router.get('/brands/:id/models', async (req, res) => {
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
 
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager', 'sales_staff'].includes(req.user.role)) {
       whereClause += ' AND (branch_id = $3 OR branch_id IS NULL)';
       values.push(req.user.branchId);
     }
@@ -130,7 +130,7 @@ router.post('/brands/:id/models', featureGate('add_device_model'), async (req, r
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
 
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager', 'sales_staff'].includes(req.user.role)) {
       whereClause += ' AND (branch_id = $3 OR branch_id IS NULL)';
       values.push(req.user.branchId);
     }
@@ -172,8 +172,8 @@ router.patch('/models/:id', featureGate('add_device_model'), async (req, res) =>
     let whereClause = 'WHERE dm.id = $2 AND dm.brand_id = b.id AND b.tenant_id = $3';
     const values = [name.trim(), id, tenantId];
 
-    if (req.user.role === 'branch_user') {
-      whereClause += ' AND (dm.branch_id = $4 OR dm.branch_id IS NULL)';
+    if (['branch_user', 'sub_branch_manager', 'sales_staff'].includes(req.user.role)) {
+      whereClause += ' AND dm.branch_id = $4';
       values.push(req.user.branchId);
     }
 
@@ -205,8 +205,8 @@ router.delete('/models/:id', featureGate('add_device_model'), async (req, res) =
     let whereClause = 'WHERE dm.id = $1 AND dm.brand_id = b.id AND b.tenant_id = $2';
     const values = [id, tenantId];
 
-    if (req.user.role === 'branch_user') {
-      whereClause += ' AND (dm.branch_id = $3 OR dm.branch_id IS NULL)';
+    if (['branch_user', 'sub_branch_manager', 'sales_staff'].includes(req.user.role)) {
+      whereClause += ' AND dm.branch_id = $3';
       values.push(req.user.branchId);
     }
 

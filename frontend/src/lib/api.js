@@ -196,8 +196,9 @@ class ApiClient {
   }
 
   // ─── DASHBOARD (Flow 3) ────────────────────────────
-  getDashboard() {
-    return this.get('/dashboard');
+  getDashboard(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/dashboard${query ? '?' + query : ''}`);
   }
 
   // ─── SERVICES (Flow 3/4/5) ─────────────────────────
@@ -301,8 +302,9 @@ class ApiClient {
   }
 
   // ─── TECHNICIANS ─────────────────────────────
-  getTechnicians() {
-    return this.get('/technicians');
+  getTechnicians(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/technicians${query ? '?' + query : ''}`);
   }
 
   createTechnician(data) {
@@ -311,6 +313,64 @@ class ApiClient {
 
   deleteTechnician(id) {
     return this.delete(`/technicians/${id}`);
+  }
+
+  // ─── SALES STAFF ─────────────────────────────
+  getSalesStaff(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/sales-staff${query ? '?' + query : ''}`);
+  }
+
+  createSalesStaff(data) {
+    return this.post('/sales-staff', data);
+  }
+
+  deleteSalesStaff(id) {
+    return this.delete(`/sales-staff/${id}`);
+  }
+
+  // ─── PHASE 1: INVENTORY & SALES ───────────────────────
+  getInventory(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/inventory${query ? '?' + query : ''}`);
+  }
+
+  addInventory(data) {
+    return this.post('/inventory', data);
+  }
+
+  getSales(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/sales${query ? '?' + query : ''}`);
+  }
+
+  recordSale(data) {
+    return this.post('/sales', data);
+  }
+
+  lookupIMEI(imei) {
+    return this.get(`/imei/${imei}`);
+  }
+
+  // ─── PHASE 2: PRICING ───────────────────────────────
+  getPricing(branchId) {
+    const query = branchId ? `?branchId=${branchId}` : '';
+    return this.get(`/pricing${query}`);
+  }
+
+  updatePricing(branchId, margins) {
+    return this.post('/pricing', { branchId, margins });
+  }
+
+  // ─── PHASE 3: ANALYTICS ──────────────────────────────
+  getSalesAnalytics(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/analytics/sales${query ? '?' + query : ''}`);
+  }
+
+  getCommissionsAnalytics(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    return this.get(`/analytics/commissions${query ? '?' + query : ''}`);
   }
 }
 

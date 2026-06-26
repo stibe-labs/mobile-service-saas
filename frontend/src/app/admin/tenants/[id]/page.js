@@ -4,16 +4,23 @@ import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/AppLayout';
 import api from '@/lib/api';
+import { Plus, Box, Smartphone, RefreshCw, Settings, Printer, LayoutDashboard, DollarSign, Package, Tag, Award, Receipt, Search, Building2 } from 'lucide-react';
 
 const FEATURE_LABELS = {
-  add_service: { label: 'Add New Service (Job Card)', icon: '+' },
-  add_part: { label: 'Add New Part', icon: '▤' },
-  add_device_model: { label: 'Add New Device Model', icon: '◘' },
-  service_status_update: { label: 'Service Status Update', icon: '⟳' },
-  parts_management: { label: 'Parts Management Module', icon: '▤' },
-  printable_job_card: { label: 'Printable Job Card', icon: '≡' },
-  printable_receipt: { label: 'Printable Service Receipt', icon: '≡' },
-  branch_dashboard: { label: 'Branch Dashboard Access', icon: '⊞' },
+  add_service: { label: 'Add New Service (Job Card)', icon: <Plus size={16} /> },
+  add_part: { label: 'Add New Part', icon: <Box size={16} /> },
+  add_device_model: { label: 'Add New Device Model', icon: <Smartphone size={16} /> },
+  service_status_update: { label: 'Service Status Update', icon: <RefreshCw size={16} /> },
+  parts_management: { label: 'Parts Management Module', icon: <Settings size={16} /> },
+  printable_job_card: { label: 'Printable Job Card', icon: <Printer size={16} /> },
+  printable_receipt: { label: 'Printable Service Receipt', icon: <Printer size={16} /> },
+  branch_dashboard: { label: 'Branch Dashboard Access', icon: <LayoutDashboard size={16} /> },
+  sales_module: { label: 'Sales Operations Module', icon: <DollarSign size={16} /> },
+  inventory_module: { label: 'Inventory Management', icon: <Package size={16} /> },
+  branch_pricing: { label: 'Branch-Specific Pricing', icon: <Tag size={16} /> },
+  staff_commission: { label: 'Staff Commissions', icon: <Award size={16} /> },
+  sales_receipt: { label: 'Printable Sales Receipt', icon: <Receipt size={16} /> },
+  imei_lookup: { label: 'Global IMEI Lookup', icon: <Search size={16} /> },
 };
 
 export default function TenantDetailsPage({ params }) {
@@ -66,7 +73,7 @@ export default function TenantDetailsPage({ params }) {
     <AppLayout>
       <div className="page-header">
         <div>
-          <h1 className="page-title">▦ Tenant Details</h1>
+          <h1 className="page-title"><Building2 size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Tenant Details</h1>
           <p className="page-subtitle">
             {tenant ? `${tenant.tenant_name}` : 'Loading...'}
           </p>

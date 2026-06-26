@@ -41,7 +41,7 @@ async function runTests() {
   console.log('\n--- Phase 1: Authentication ---');
   
   // Superadmin login
-  let res = await fetchAPI('/auth/login', 'POST', { email: 'superadmin@gmail.com', password: 'admin123' });
+  let res = await fetchAPI('/auth/login', 'POST', { email: 'stibe@superadmin', password: 'admin123' });
   assert(res.status === 200 && res.data.token, 'Superadmin login successful');
   superadminToken = res.data.token;
 

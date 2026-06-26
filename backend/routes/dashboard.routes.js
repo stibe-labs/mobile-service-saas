@@ -5,10 +5,10 @@ const { featureGate } = require('../middleware/featureGate');
 
 const router = express.Router();
 
-router.use(authenticate, requireRole('tenant_admin', 'branch_user'));
+router.use(authenticate, requireRole('tenant_admin', 'branch_user', 'sub_branch_manager', 'main_branch_manager'));
 
 const getTargetBranchId = (req, bodyBranchId) => {
-  if (req.user.role === 'branch_user') {
+  if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
     return req.user.branchId;
   }
   return bodyBranchId || null;
@@ -57,7 +57,7 @@ router.get('/', featureGate('branch_dashboard'), async (req, res) => {
       FROM services
       ${whereClause} 
         AND status NOT IN ('delivered', 'cancelled')
-      ORDER BY created_at DESC
+      ORDER BY updated_at DESC, created_at DESC
       LIMIT 10
     `, values);
 

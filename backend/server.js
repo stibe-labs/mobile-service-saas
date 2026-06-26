@@ -64,6 +64,24 @@ app.use('/api/models', require('./routes/models.routes'));
 // Flow: Technician Management
 app.use('/api/technicians', require('./routes/technicians.routes'));
 
+// Flow: Sales Staff Management
+app.use('/api/sales-staff', require('./routes/salesstaff.routes'));
+
+// Flow 12: Inventory Management
+app.use('/api/inventory', require('./routes/inventory.routes'));
+
+// Flow 13: Phone Sales
+app.use('/api/sales', require('./routes/sales.routes'));
+
+// Flow 16: Universal IMEI Lookup
+app.use('/api/imei', require('./routes/imei.routes'));
+
+// Flow 14: Branch Pricing
+app.use('/api/pricing', require('./routes/pricing.routes'));
+
+// Flow 15: Cross-branch Analytics
+app.use('/api/analytics', require('./routes/analytics.routes'));
+
 // ─── HEALTH CHECK ───────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({

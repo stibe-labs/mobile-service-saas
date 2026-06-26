@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AppLayout from '@/components/AppLayout';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import { Smartphone, Plus, PlusCircle, Check, X, Trash2, ArrowLeft } from 'lucide-react';
 
 export default function ModelsPage() {
   const { isFeatureEnabled, isTenantAdmin } = useAuth();
@@ -19,6 +20,10 @@ export default function ModelsPage() {
   const [newBrand, setNewBrand] = useState({ name: '', branchId: '' });
   const [newModel, setNewModel] = useState('');
   const [showBrandModal, setShowBrandModal] = useState(false);
+
+  // Inline delete confirmation (no window.confirm needed)
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const loadBrands = (branch) => {
     setLoading(true);
@@ -52,7 +57,7 @@ export default function ModelsPage() {
       setNewBrand({ name: '', branchId: '' });
       setShowBrandModal(false);
       loadBrands(branchFilter);
-    } catch (err) { setError(err.error); }
+    } catch (err) { setError(err.error || err.message || 'Failed to add brand'); }
   };
 
   const handleAddModel = async (e) => {
@@ -62,15 +67,34 @@ export default function ModelsPage() {
       await api.createModel(selectedBrand.id, newModel.trim(), selectedBrand.branch_id);
       setNewModel('');
       selectBrand(selectedBrand);
-    } catch (err) { setError(err.error); }
+      loadBrands(branchFilter);
+    } catch (err) { setError(err.error || err.message || 'Failed to add model'); }
   };
 
-  const handleDeleteModel = async (modelId) => {
-    if (!confirm('Delete this model?')) return;
+  // Step 1: User clicks ✕ → show inline "Sure?" confirmation
+  const handleDeleteModel = (modelId) => {
+    setConfirmingDeleteId(modelId);
+  };
+
+  // Step 2: User clicks ✓ → actually delete
+  const confirmDelete = async (modelId) => {
+    setDeleting(true);
+    setError('');
     try {
       await api.deleteModel(modelId);
+      setConfirmingDeleteId(null);
       selectBrand(selectedBrand);
-    } catch (err) { setError(err.error); }
+      loadBrands(branchFilter);
+    } catch (err) {
+      setError(err.error || err.message || 'Failed to delete model');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // Step 2 alt: User clicks ✗ → cancel
+  const cancelDelete = () => {
+    setConfirmingDeleteId(null);
   };
 
   return (
@@ -78,7 +102,7 @@ export default function ModelsPage() {
       <AppLayout>
         <div className="page-header">
           <div>
-            <h1 className="page-title">◘ Device Models</h1>
+            <h1 className="page-title"><Smartphone size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Device Models</h1>
             <p className="page-subtitle">{isTenantAdmin ? 'Manage brands & models across company' : 'Manage brands & models for job cards'}</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -90,7 +114,7 @@ export default function ModelsPage() {
             )}
             {isFeatureEnabled('add_device_model') && (
               <button className="btn btn-primary" onClick={() => setShowBrandModal(true)}>
-                + Add Brand
+                <Plus size={18} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }}/> Add Brand
               </button>
             )}
           </div>
@@ -142,7 +166,7 @@ export default function ModelsPage() {
                 {isFeatureEnabled('add_device_model') && (
                   <form onSubmit={handleAddModel} style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
                     <input className="form-input" placeholder="New model name..." value={newModel} onChange={(e) => setNewModel(e.target.value)} style={{ flex: 1 }} />
-                    <button type="submit" className="btn btn-success btn-sm">+ Add</button>
+                    <button type="submit" className="btn btn-success btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Plus size={14}/> Add</button>
                   </form>
                 )}
 
@@ -158,7 +182,29 @@ export default function ModelsPage() {
                             <td><strong>{m.name}</strong></td>
                             <td style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{new Date(m.created_at).toLocaleDateString()}</td>
                             <td>
-                              <button className="btn btn-danger btn-sm" onClick={() => handleDeleteModel(m.id)}>✕</button>
+                              {confirmingDeleteId === m.id ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Sure?</span>
+                                  <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => confirmDelete(m.id)}
+                                    disabled={deleting}
+                                    style={{ padding: '4px', display: 'flex' }}
+                                  >
+                                    {deleting ? '...' : <Check size={14} />}
+                                  </button>
+                                  <button
+                                    className="btn btn-ghost btn-sm"
+                                    onClick={cancelDelete}
+                                    disabled={deleting}
+                                    style={{ padding: '4px', display: 'flex' }}
+                                  >
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteModel(m.id)} style={{ padding: '6px', display: 'flex' }}><Trash2 size={16} /></button>
+                              )}
                             </td>
                           </tr>
                         ))}
@@ -169,7 +215,7 @@ export default function ModelsPage() {
               </>
             ) : (
               <div className="empty-state" style={{ padding: '40px' }}>
-                <div className="empty-state-icon">←</div>
+                <div className="empty-state-icon"><ArrowLeft size={48} color="var(--text-muted)"/></div>
                 <div className="empty-state-text">Select a brand to view its models</div>
               </div>
             )}
@@ -181,13 +227,13 @@ export default function ModelsPage() {
       {showBrandModal && (
         <div className="modal-overlay" onClick={() => setShowBrandModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">+ Add New Brand</h2>
+            <h2 className="modal-title"><PlusCircle size={24} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Add New Brand</h2>
             <form onSubmit={handleAddBrand}>
               {isTenantAdmin && (
                 <div className="form-group">
                   <label className="form-label">Branch *</label>
-                  <select className="form-select" value={newBrand.branchId} onChange={(e) => setNewBrand({ ...newBrand, branchId: e.target.value })} required>
-                    <option value="">Select a branch...</option>
+                  <select className="form-select" value={newBrand.branchId} onChange={(e) => setNewBrand({ ...newBrand, branchId: e.target.value })}>
+                    <option value="">Global (All Branches)</option>
                     {branches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
                 </div>

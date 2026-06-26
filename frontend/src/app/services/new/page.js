@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/AppLayout';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import { PlusCircle, ArrowLeft, Save } from 'lucide-react';
 
 export default function NewServicePage() {
   const { isTenantAdmin } = useAuth();
@@ -73,10 +74,10 @@ export default function NewServicePage() {
     <AppLayout>
       <div className="page-header">
         <div>
-          <h1 className="page-title">+ Add New Service</h1>
+          <h1 className="page-title"><PlusCircle size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Add New Service</h1>
           <p className="page-subtitle">Create a new job card</p>
         </div>
-        <button className="btn btn-ghost" onClick={() => router.back()}>← Back</button>
+        <button className="btn btn-ghost" onClick={() => router.back()} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><ArrowLeft size={16}/> Back</button>
       </div>
 
       {error && <div className="alert alert-error">! {error}</div>}
@@ -155,8 +156,8 @@ export default function NewServicePage() {
 
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
             <button type="button" className="btn btn-ghost" onClick={() => router.back()}>Cancel</button>
-            <button type="submit" className="btn btn-success" disabled={loading}>
-              {loading ? 'Creating...' : '💾 Save Job Card'}
+            <button type="submit" className="btn btn-success" disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {loading ? 'Creating...' : <><Save size={18}/> Save Job Card</>}
             </button>
           </div>
         </form>

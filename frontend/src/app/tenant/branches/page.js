@@ -29,6 +29,10 @@ export default function BranchesPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editForm, setEditForm] = useState({ id: '', name: '', branchCode: '', address: '', phone: '' });
 
+  // Inline delete confirmation
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
   useEffect(() => {
     if (!loading && !isTenantAdmin) {
       router.push('/dashboard');
@@ -77,17 +81,28 @@ export default function BranchesPage() {
     }
   };
 
-  const handleDelete = async (id, name) => {
-    if (!confirm(`Are you sure you want to delete branch "${name}"?\nWARNING: This will fail if the branch contains any job cards or data.`)) return;
-    
+  const handleDeleteClick = (id) => {
+    setConfirmingDeleteId(id);
+  };
+
+  const confirmDelete = async (id) => {
+    setDeleting(true);
+    setError('');
     try {
       await api.deleteBranch(id);
       setSuccess('Branch deleted successfully.');
+      setConfirmingDeleteId(null);
       loadBranches();
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      alert(err.message || 'Failed to delete branch');
+      setError(err.message || 'Failed to delete branch');
+    } finally {
+      setDeleting(false);
     }
+  };
+
+  const cancelDelete = () => {
+    setConfirmingDeleteId(null);
   };
 
   if (loading || !isTenantAdmin) return <div className="loading">Loading...</div>;
@@ -155,13 +170,35 @@ export default function BranchesPage() {
                       >
                         ✎ Edit
                       </button>
-                      <button
-                        className="btn btn-ghost btn-sm"
-                        onClick={() => handleDelete(b.id, b.name)}
-                        style={{ color: 'var(--danger-color)' }}
-                      >
-                        Delete
-                      </button>
+                      {confirmingDeleteId === b.id ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Sure?</span>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => confirmDelete(b.id)}
+                            disabled={deleting}
+                            style={{ padding: '2px 8px', fontSize: '0.85rem' }}
+                          >
+                            {deleting ? '...' : '✓'}
+                          </button>
+                          <button
+                            className="btn btn-ghost btn-sm"
+                            onClick={cancelDelete}
+                            disabled={deleting}
+                            style={{ padding: '2px 8px', fontSize: '0.85rem' }}
+                          >
+                            ✗
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          className="btn btn-ghost btn-sm"
+                          onClick={() => handleDeleteClick(b.id)}
+                          style={{ color: 'var(--danger-color)' }}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

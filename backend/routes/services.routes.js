@@ -11,11 +11,11 @@ const { featureGate } = require('../middleware/featureGate');
 const router = express.Router();
 
 // Both Main Branch Admins, Branch Users, and Technicians can access services (restricted internally)
-router.use(authenticate, requireRole('tenant_admin', 'branch_user', 'technician'));
+router.use(authenticate, requireRole('tenant_admin', 'branch_user', 'main_branch_manager', 'sub_branch_manager', 'technician'));
 
 // Helper to determine the branch_id for the operation
 const getTargetBranchId = (req, bodyBranchId) => {
-  if (req.user.role === 'branch_user') {
+  if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
     return req.user.branchId; // Branch user is restricted to their branch
   }
   // Tenant admin must specify the branch they are operating on, or it defaults to null if global
@@ -155,7 +155,7 @@ router.get('/', async (req, res) => {
       LEFT JOIN users u ON s.created_by = u.id
       LEFT JOIN branches br ON s.branch_id = br.id
       ${whereClause}
-      ORDER BY s.created_at DESC
+      ORDER BY s.updated_at DESC, s.created_at DESC
       LIMIT $${paramIndex++} OFFSET $${paramIndex++}
     `, values);
 
@@ -189,7 +189,7 @@ router.get('/:id', async (req, res) => {
 
     let whereClause = 'WHERE s.id = $1 AND s.tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user' || req.user.role === 'technician') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role) || req.user.role === 'technician') {
       whereClause += ' AND s.branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -269,7 +269,7 @@ router.patch('/:id/status', featureGate('service_status_update'), async (req, re
 
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user' || req.user.role === 'technician') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role) || req.user.role === 'technician') {
       whereClause += ' AND branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -303,7 +303,7 @@ router.patch('/:id/status', featureGate('service_status_update'), async (req, re
     let updateWhereClause = `WHERE id = $${paramIndex++} AND tenant_id = $${paramIndex++}`;
     updateValues.push(id, tenantId);
 
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       updateWhereClause += ` AND branch_id = $${paramIndex++}`;
       updateValues.push(req.user.branchId);
     }
@@ -350,7 +350,7 @@ router.post('/:id/parts', featureGate('add_part'), async (req, res) => {
 
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ' AND branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -423,7 +423,7 @@ router.delete('/:id/parts/:spId', featureGate('add_part'), async (req, res) => {
 
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ' AND branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -458,7 +458,7 @@ router.post('/:id/notes', async (req, res) => {
 
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user' || req.user.role === 'technician') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role) || req.user.role === 'technician') {
       whereClause += ' AND branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -505,7 +505,7 @@ router.get('/:id/history', async (req, res) => {
 
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ' AND branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -538,7 +538,7 @@ router.get('/:id/print/jobcard', featureGate('printable_job_card'), async (req, 
 
     let whereClause = 'WHERE s.id = $1 AND s.tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ' AND s.branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -576,7 +576,7 @@ router.get('/:id/print/receipt', featureGate('printable_receipt'), async (req, r
 
     let whereClause = 'WHERE s.id = $1 AND s.tenant_id = $2';
     const values = [id, tenantId];
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ' AND s.branch_id = $3';
       values.push(req.user.branchId);
     }
@@ -636,7 +636,7 @@ router.patch('/:id', async (req, res) => {
     let whereClause = `WHERE id = $${paramIndex++} AND tenant_id = $${paramIndex++}`;
     values.push(id, tenantId);
     
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ` AND branch_id = $${paramIndex++}`;
       values.push(req.user.branchId);
     }

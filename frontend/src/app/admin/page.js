@@ -5,6 +5,7 @@ import AppLayout from '@/components/AppLayout';
 import api from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Shield, Building2, CheckCircle2, Ban, Clock, Globe } from 'lucide-react';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -23,11 +24,11 @@ export default function AdminDashboard() {
     <AppLayout>
       <div className="page-header">
         <div>
-          <h1 className="page-title">★ Super Admin Dashboard</h1>
+          <h1 className="page-title"><Shield size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Super Admin Dashboard</h1>
           <p className="page-subtitle">Platform overview — manage all tenants</p>
         </div>
-        <Link href="/admin/tenants" className="btn btn-primary">
-          ▦ Manage Tenants
+        <Link href="/admin/tenants" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Building2 size={18}/> Manage Tenants
         </Link>
       </div>
 
@@ -42,28 +43,28 @@ export default function AdminDashboard() {
           {/* Stats */}
           <div className="stat-grid">
             <div className="stat-card">
-              <div className="stat-icon purple">▦</div>
+              <div className="stat-icon purple"><Building2 size={24} /></div>
               <div>
                 <div className="stat-value">{data.summary.total_tenants}</div>
                 <div className="stat-label">Total Tenants</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon green">+</div>
+              <div className="stat-icon green"><CheckCircle2 size={24} /></div>
               <div>
                 <div className="stat-value">{data.summary.active_tenants}</div>
                 <div className="stat-label">Active</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon red">-</div>
+              <div className="stat-icon red"><Ban size={24} /></div>
               <div>
                 <div className="stat-value">{data.summary.suspended_tenants}</div>
                 <div className="stat-label">Suspended</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon amber">•</div>
+              <div className="stat-icon amber"><Clock size={24} /></div>
               <div>
                 <div className="stat-value">{data.summary.pending_tenants}</div>
                 <div className="stat-label">Pending</div>
@@ -78,7 +79,7 @@ export default function AdminDashboard() {
             </div>
             {data.tenants.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-state-icon">▦</div>
+                <div className="empty-state-icon"><Building2 size={48} color="var(--text-muted)" /></div>
                 <div className="empty-state-text">No tenants yet</div>
               </div>
             ) : (
@@ -105,9 +106,9 @@ export default function AdminDashboard() {
                         <td><strong>{tenant.name || '-'}</strong></td>
                         <td>
                           {tenant.source === 'self_registered' ? (
-                            <span style={{ fontSize: '0.85rem', color: '#0ea5e9' }}>🌐 Website</span>
+                            <span style={{ fontSize: '0.85rem', color: '#0ea5e9', display: 'flex', alignItems: 'center', gap: '4px' }}><Globe size={14}/> Website</span>
                           ) : (
-                            <span style={{ fontSize: '0.85rem', color: '#8b5cf6' }}>🛡️ Admin</span>
+                            <span style={{ fontSize: '0.85rem', color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: '4px' }}><Shield size={14}/> Admin</span>
                           )}
                         </td>
                         <td>

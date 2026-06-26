@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AppLayout from '@/components/AppLayout';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import { Cpu, Plus, PlusCircle, Search, Edit2, Trash2, Check, X } from 'lucide-react';
 
 export default function PartsPage() {
   const { isFeatureEnabled, isTenantAdmin } = useAuth();
@@ -16,6 +17,9 @@ export default function PartsPage() {
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const [form, setForm] = useState({ name: '', costPrice: '', sellingPrice: '', branchId: '' });
+  
+  // Inline delete confirmation
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState(null);
 
   const loadParts = (q, branch) => {
     setLoading(true);
@@ -61,12 +65,23 @@ export default function PartsPage() {
     setShowModal(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm('Delete this part?')) return;
+  const handleDeletePrompt = (id) => {
+    setConfirmingDeleteId(id);
+  };
+
+  const confirmDelete = async (id) => {
     try {
       await api.deletePart(id);
+      setConfirmingDeleteId(null);
       loadParts(search, branchFilter);
-    } catch (err) { setError(err.error); }
+    } catch (err) { 
+      setError(err.error); 
+      setConfirmingDeleteId(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setConfirmingDeleteId(null);
   };
 
   const handleSearch = (e) => {
@@ -79,12 +94,12 @@ export default function PartsPage() {
       <AppLayout>
         <div className="page-header">
           <div>
-            <h1 className="page-title">▤ Parts Management</h1>
+            <h1 className="page-title"><Cpu size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Parts Management</h1>
             <p className="page-subtitle">{isTenantAdmin ? 'Manage catalogue across company' : 'Manage your parts catalogue'}</p>
           </div>
           {isFeatureEnabled('add_part') && (
             <button className="btn btn-primary" onClick={() => { setEditPart(null); setForm({ name: '', costPrice: '', sellingPrice: '', branchId: '' }); setShowModal(true); }}>
-              + Add Part
+              <Plus size={18} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }}/> Add Part
             </button>
           )}
         </div>
@@ -95,7 +110,7 @@ export default function PartsPage() {
           <div style={{ display: 'flex', gap: '10px' }}>
             <form onSubmit={handleSearch} style={{ display: 'flex', gap: '8px', flex: 1 }}>
               <input className="form-input" placeholder="Search parts..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ flex: 1 }} />
-              <button type="submit" className="btn btn-primary">⌕</button>
+              <button type="submit" className="btn btn-primary" style={{ padding: '0 16px', display: 'flex', alignItems: 'center' }}><Search size={18} /></button>
             </form>
             {isTenantAdmin && (
               <select className="form-select" value={branchFilter} onChange={(e) => setBranchFilter(e.target.value)} style={{ width: '200px' }}>
@@ -109,7 +124,7 @@ export default function PartsPage() {
         {loading ? (
           <div className="loading-screen" style={{ minHeight: '200px' }}><div className="spinner"></div></div>
         ) : parts.length === 0 ? (
-          <div className="card"><div className="empty-state"><div className="empty-state-icon">▤</div><div className="empty-state-text">No parts yet</div></div></div>
+          <div className="card"><div className="empty-state"><div className="empty-state-icon"><Cpu size={48} color="var(--text-muted)" /></div><div className="empty-state-text">No parts yet</div></div></div>
         ) : (
           <div className="card" style={{ padding: 0 }}>
             <div className="table-wrap" style={{ border: 'none' }}>
@@ -130,8 +145,16 @@ export default function PartsPage() {
                           : '—'}
                       </td>
                       <td style={{ display: 'flex', gap: '6px' }}>
-                        <button className="btn btn-ghost btn-sm" onClick={() => handleEdit(p)}>✎</button>
-                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}>✕</button>
+                        <button className="btn btn-ghost btn-sm" onClick={() => handleEdit(p)} style={{ padding: '6px', display: 'flex' }}><Edit2 size={16} /></button>
+                        {confirmingDeleteId === p.id ? (
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Sure?</span>
+                            <button className="btn btn-sm btn-success" onClick={() => confirmDelete(p.id)} style={{ padding: '4px', display: 'flex' }}><Check size={14} /></button>
+                            <button className="btn btn-sm btn-ghost" onClick={cancelDelete} style={{ padding: '4px', display: 'flex' }}><X size={14} /></button>
+                          </div>
+                        ) : (
+                          <button className="btn btn-danger btn-sm" onClick={() => handleDeletePrompt(p.id)} style={{ padding: '6px', display: 'flex' }}><Trash2 size={16} /></button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -145,7 +168,9 @@ export default function PartsPage() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">{editPart ? '✎ Edit Part' : '+ Add New Part'}</h2>
+            <h2 className="modal-title">
+              {editPart ? <><Edit2 size={24} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Edit Part</> : <><PlusCircle size={24} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Add New Part</>}
+            </h2>
             <form onSubmit={handleSubmit}>
               {isTenantAdmin && !editPart && (
                 <div className="form-group">

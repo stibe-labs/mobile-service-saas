@@ -5,10 +5,10 @@ const { authenticate, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate, requireRole('tenant_admin', 'branch_user'));
+router.use(authenticate, requireRole('tenant_admin', 'branch_user', 'main_branch_manager', 'sub_branch_manager'));
 
 const getTargetBranchId = (req, bodyBranchId) => {
-  if (req.user.role === 'branch_user') {
+  if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
     return req.user.branchId;
   }
   return bodyBranchId || null;
@@ -106,7 +106,7 @@ router.delete('/:id', async (req, res) => {
     let whereClause = 'WHERE id = $1 AND tenant_id = $2';
     const values = [id, tenantId];
 
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ' AND (branch_id = $3 OR branch_id IS NULL)';
       values.push(req.user.branchId);
     }

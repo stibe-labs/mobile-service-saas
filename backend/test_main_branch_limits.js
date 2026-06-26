@@ -22,7 +22,7 @@ async function runTests() {
   console.log('--- Starting Cross-Branch Technician Limit Test ---');
 
   // 1. Super Admin Login
-  let res = await fetchAPI('/auth/login', 'POST', { email: 'superadmin@gmail.com', password: 'admin123' });
+  let res = await fetchAPI('/auth/login', 'POST', { email: 'stibe@superadmin', password: 'admin123' });
   if (res.status !== 200) throw new Error('Superadmin login failed');
   const superadminToken = res.data.token;
 

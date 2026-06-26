@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import AppLayout from '@/components/AppLayout';
 import api from '@/lib/api';
+import Link from 'next/link';
+import { Building2, Globe, Shield } from 'lucide-react';
 
 export default function TenantsPage() {
   const [tenants, setTenants] = useState([]);
@@ -71,8 +73,8 @@ export default function TenantsPage() {
       <AppLayout>
         <div className="page-header">
           <div>
-            <h1 className="page-title">▦ Tenant Management</h1>
-            <p className="page-subtitle">Manage all shops on the platform</p>
+            <h1 className="page-title"><Building2 size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Tenant Management</h1>
+            <p className="page-subtitle">Add, edit, or suspend tenant subscriptions</p>
           </div>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
             + Add Tenant
@@ -107,11 +109,11 @@ export default function TenantsPage() {
                       <td>
                         {t.source === 'self_registered' ? (
                           <span style={{ fontSize: '0.85rem', color: '#0ea5e9', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <span style={{ fontSize: '1rem' }}>🌐</span> Website
+                            <Globe size={14}/> Website
                           </span>
                         ) : (
                           <span style={{ fontSize: '0.85rem', color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <span style={{ fontSize: '1rem' }}>🛡️</span> Admin
+                            <Shield size={14}/> Admin
                           </span>
                         )}
                       </td>

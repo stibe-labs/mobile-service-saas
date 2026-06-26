@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Service Shop – Simplified System Flowchart (v2.0)</title>
+    <title>Mobile Service Shop – System Flowchart (v3.0)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,6 +15,8 @@
             --cyan: #06b6d4; --cyan-l: #e0f7fa;
             --orange: #f97316; --orange-l: #fff3e6;
             --pink: #ec4899; --pink-l: #fde8f4;
+            --teal: #14b8a6; --teal-l: #e0f5f3;
+            --indigo: #6366f1; --indigo-l: #e8e8ff;
             --g50:#f9fafb; --g100:#f3f4f6; --g200:#e5e7eb; --g300:#d1d5db;
             --g400:#9ca3af; --g500:#6b7280; --g600:#4b5563; --g700:#374151; --g800:#1f2937; --g900:#111827;
             --lc: #94a3b8;
@@ -27,12 +29,15 @@
         .title p{font-size:0.82rem;color:var(--g500);margin-top:6px;}
         .title .meta{display:inline-flex;gap:16px;margin-top:10px;font-size:0.72rem;color:var(--g400);}
         .title .badge{display:inline-block;margin-top:12px;background:var(--green-l);border:1.5px solid var(--green);color:#15803d;font-size:0.7rem;font-weight:700;padding:4px 14px;border-radius:50px;}
+        .title .badge.new{background:var(--indigo-l);border-color:var(--indigo);color:var(--indigo);}
 
         .canvas{max-width:1300px;margin:0 auto;}
 
         /* Section groups */
         .sg{border:2px dashed var(--g200);border-radius:14px;padding:28px 24px 24px;position:relative;background:var(--g50);}
         .sg > .gl{position:absolute;top:-12px;left:24px;background:#fff;padding:2px 14px;font-size:0.72rem;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:1.2px;border-radius:6px;border:1px solid var(--g200);}
+        .sg.new-flow{border-color:var(--indigo);background:linear-gradient(135deg, #f5f3ff 0%, var(--g50) 100%);}
+        .sg.new-flow > .gl{background:var(--indigo-l);border-color:var(--indigo);color:var(--indigo);}
 
         /* Nodes */
         .n{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 18px;border-radius:10px;font-size:0.78rem;font-weight:600;border:2px solid;background:#fff;position:relative;line-height:1.4;}
@@ -48,6 +53,8 @@
         .n.cyan{border-color:var(--cyan);color:#0e7490;background:var(--cyan-l);}
         .n.orange{border-color:var(--orange);color:#c2410c;background:var(--orange-l);}
         .n.pink{border-color:var(--pink);color:#be185d;background:var(--pink-l);}
+        .n.teal{border-color:var(--teal);color:#0f766e;background:var(--teal-l);}
+        .n.indigo{border-color:var(--indigo);color:#4338ca;background:var(--indigo-l);}
         .n.gray{border-color:var(--g300);color:var(--g600);background:var(--g100);}
 
         /* Screen detail box */
@@ -63,6 +70,9 @@
         .screen.rl{border-left:3px solid var(--rose);}
         .screen.cl{border-left:3px solid var(--cyan);}
         .screen.ol{border-left:3px solid var(--orange);}
+        .screen.tl{border-left:3px solid var(--teal);}
+        .screen.il{border-left:3px solid var(--indigo);}
+        .screen.pkl{border-left:3px solid var(--pink);}
 
         /* Diamond */
         .dw{display:flex;justify-content:center;align-items:center;}
@@ -100,6 +110,10 @@
             flex:0 1 180px;
             max-width:180px;
         }
+        .card-col.wide{
+            flex:1 1 280px;
+            max-width:340px;
+        }
         .screen.compact{padding:8px 10px;}
         .screen.compact .st{font-size:0.66rem;margin-bottom:4px;}
         .screen.compact ul li{font-size:0.63rem;line-height:1.35;}
@@ -110,6 +124,7 @@
         .tag.no{background:var(--rose-l);color:var(--rose);}
         .tag.admin{background:var(--purple-l);color:var(--purple);}
         .tag.branch{background:var(--cyan-l);color:#0e7490;}
+        .tag.new{background:var(--indigo-l);color:var(--indigo);font-size:0.58rem;padding:1px 6px;border-radius:3px;vertical-align:middle;}
 
         /* Status nodes */
         .sn{padding:7px 14px;border-radius:8px;font-size:0.7rem;font-weight:600;border:2px solid;background:#fff;white-space:nowrap;display:inline-block;}
@@ -125,6 +140,9 @@
         /* Important rule */
         .imp{background:var(--rose-l);border:2px solid var(--rose);border-radius:8px;padding:10px 14px;font-size:0.72rem;color:var(--rose);font-weight:500;text-align:left;max-width:460px;line-height:1.5;margin:0 auto;}
         .imp strong{font-weight:700;}
+        .imp.info{background:var(--blue-l);border-color:var(--blue);color:var(--blue);}
+        .imp.success{background:var(--green-l);border-color:var(--green);color:#15803d;}
+        .imp.new-info{background:var(--indigo-l);border-color:var(--indigo);color:#4338ca;}
 
         /* Feature toggle table */
         .toggle-table{width:100%;border-collapse:collapse;font-size:0.68rem;margin-top:8px;}
@@ -132,6 +150,20 @@
         .toggle-table td{padding:5px 10px;border-bottom:1px solid var(--g200);color:var(--g600);}
         .toggle-table .on{color:#15803d;font-weight:600;}
         .toggle-table .off{color:var(--rose);font-weight:600;}
+        .toggle-table .new-tag{font-size:0.58rem;background:var(--indigo-l);color:var(--indigo);padding:1px 5px;border-radius:3px;font-weight:700;margin-left:4px;}
+
+        /* Pricing formula box */
+        .formula-box{background:#fff;border:2px solid var(--teal);border-radius:12px;padding:16px 20px;max-width:700px;width:100%;text-align:center;}
+        .formula-box .formula{font-size:0.82rem;font-weight:700;color:var(--g800);letter-spacing:0.5px;line-height:1.8;}
+        .formula-box .formula .part{display:inline-block;padding:4px 10px;border-radius:6px;margin:2px 4px;}
+        .formula-box .formula .plus{color:var(--g400);font-weight:400;margin:0 2px;}
+        .formula-box .formula .eq{color:var(--g400);font-weight:400;margin:0 6px;}
+
+        /* Step indicator */
+        .step-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:0.65rem;font-weight:800;color:#fff;margin-bottom:4px;}
+        .step-num.pink-bg{background:var(--pink);}
+        .step-num.teal-bg{background:var(--teal);}
+        .step-num.indigo-bg{background:var(--indigo);}
 
         /* Removed feature callout */
         .removed{background:var(--g100);border:2px dashed var(--g300);border-radius:10px;padding:14px 18px;margin-top:20px;max-width:600px;}
@@ -154,6 +186,15 @@
         .flex-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;align-items:flex-start;}
         .flex-row .col{flex:1;min-width:200px;max-width:280px;}
 
+        /* Version badge inline */
+        .vb{font-size:0.56rem;font-weight:700;padding:1px 6px;border-radius:3px;vertical-align:super;margin-left:3px;}
+        .vb.v2{background:var(--cyan-l);color:#0e7490;}
+        .vb.v3{background:var(--indigo-l);color:var(--indigo);}
+
+        /* Section divider */
+        .section-divider{text-align:center;margin:30px 0 10px;padding:10px 0;}
+        .section-divider span{font-size:0.78rem;font-weight:700;color:var(--indigo);background:var(--indigo-l);padding:6px 20px;border-radius:50px;border:1.5px solid var(--indigo);}
+
         @media print{body{padding:15px;font-size:10px;}.sg{break-inside:avoid;page-break-inside:avoid;}}
         @media(max-width:800px){.card-row{flex-direction:column;align-items:center;}.card-col{max-width:100%;}}
     </style>
@@ -161,10 +202,13 @@
 <body>
 
 <div class="title">
-    <h1>📱 Mobile Service Shop — Simplified System Flow Diagram</h1>
-    <p>MVP scope — digital job-card management, service tracking &amp; Super Admin control layer</p>
-    <div class="badge">✨ Simplified MVP — v2.0</div>
-    <div class="meta"><span>Type: System Flow Diagram</span><span>|</span><span>v2.0</span><span>|</span><span>June 2026</span></div>
+    <h1>📱 Mobile Service Shop — System Flow Diagram</h1>
+    <p>Service tracking, phone sales, inventory management, pricing & commission system</p>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <div class="badge">✅ v2.0 Core — Service & Repair</div>
+        <div class="badge new">🆕 v3.0 — Sales, Inventory, Pricing, IMEI</div>
+    </div>
+    <div class="meta"><span>Type: System Flow Diagram</span><span>|</span><span>v3.0</span><span>|</span><span>June 2026</span></div>
 </div>
 
 <div class="canvas">
@@ -182,14 +226,14 @@
         <div class="dw"><div class="dia"><span>Valid<br>Credentials?</span></div></div>
         <div class="sp"></div>
 
-        <div class="card-row" style="max-width:600px;margin:0 auto;">
+        <div class="card-row" style="max-width:900px;margin:0 auto;">
             <div class="card-col">
                 <div class="tag no">✗ NO</div>
                 <div class="ad xs"></div>
                 <div class="n rose sm">Show Error Message</div>
                 <div class="cn">↩ Return to Login</div>
             </div>
-            <div class="card-col">
+            <div class="card-col" style="max-width:700px;flex:2 1 400px;">
                 <div class="tag yes">✓ YES</div>
                 <div class="ad xs"></div>
                 <div class="n green sm">Auth Success</div>
@@ -204,10 +248,22 @@
                         <div class="cn">→ See Flow 2</div>
                     </div>
                     <div class="card-col">
+                        <div class="tag" style="background:var(--teal-l);color:var(--teal);">BRANCH MANAGER <span class="tag new">v3.0</span></div>
+                        <div class="ad xs"></div>
+                        <div class="n teal sm">🏪 Branch Manager Dashboard</div>
+                        <div class="cn">→ See Flow 10</div>
+                    </div>
+                    <div class="card-col">
                         <div class="tag branch">TENANT USER</div>
                         <div class="ad xs"></div>
                         <div class="n cyan sm">🏪 Tenant Dashboard</div>
                         <div class="cn">→ See Flow 3</div>
+                    </div>
+                    <div class="card-col">
+                        <div class="tag" style="background:var(--pink-l);color:var(--pink);">SALES STAFF <span class="tag new">v3.0</span></div>
+                        <div class="ad xs"></div>
+                        <div class="n pink sm">🛒 Sales Staff Dashboard</div>
+                        <div class="cn">→ See Flow 11</div>
                     </div>
                     <div class="card-col">
                         <div class="tag" style="background:var(--orange-l);color:var(--orange);">TECHNICIAN</div>
@@ -270,6 +326,7 @@
                         <li>Hiding a feature removes the UI button</li>
                         <li>No data is deleted when toggled off</li>
                         <li>See toggle table below ↓</li>
+                        <li><strong>🆕 v3.0 toggles added</strong></li>
                     </ul>
                 </div>
                 <div class="cn">→ See Flow 2A below</div>
@@ -289,24 +346,32 @@
         <div class="n purple">🎛️ Feature Toggle Settings<div class="sub">Super Admin selects a tenant → controls which features are visible</div></div>
         <div class="ad s"></div>
 
-        <div style="max-width:600px;width:100%;background:#fff;border:1.5px solid var(--g200);border-radius:10px;padding:14px 16px;">
+        <div style="max-width:700px;width:100%;background:#fff;border:1.5px solid var(--g200);border-radius:10px;padding:14px 16px;">
             <table class="toggle-table">
                 <thead>
                     <tr>
                         <th>Feature / Button</th>
                         <th>Controlled By</th>
                         <th>Default</th>
+                        <th>Version</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Add New Service (Job Card)</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
-                    <tr><td>Add New Part</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
-                    <tr><td>Add New Device Model</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
-                    <tr><td>Service Status Update</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
-                    <tr><td>Parts Management Module</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
-                    <tr><td>Printable Job Card</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
-                    <tr><td>Printable Service Receipt</td><td>Super Admin</td><td class="off">⛔ Disabled</td></tr>
-                    <tr><td>Branch Dashboard Access</td><td>Super Admin</td><td class="on">✅ Enabled</td></tr>
+                    <tr><td>Add New Service (Job Card)</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Add New Part</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Add New Device Model</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Service Status Update</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Parts Management Module</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Printable Job Card</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Printable Service Receipt</td><td>Super Admin</td><td class="off">⛔ Disabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr><td>Branch Dashboard Access</td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v2">v2.0</span></td></tr>
+                    <tr style="border-top:2px solid var(--indigo);"><td><strong>Sales Module (Phone Sales)</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
+                    <tr><td><strong>Inventory Module</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
+                    <tr><td><strong>Branch Pricing / Profit Margin</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
+                    <tr><td><strong>Sales Staff Commission</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
+                    <tr><td><strong>Sales Receipt (Phone Sale)</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
+                    <tr><td><strong>IMEI Device Lookup</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
+                    <tr><td><strong>Branch Sales Dashboard</strong><span class="new-tag">NEW</span></td><td>Super Admin</td><td class="on">✅ Enabled</td><td><span class="vb v3">v3.0</span></td></tr>
                 </tbody>
             </table>
         </div>
@@ -763,7 +828,7 @@
         <div class="dw"><div class="dia"><span>Action?</span></div></div>
         <div class="sp"></div>
 
-        <div class="card-row" style="max-width:500px;margin:0 auto;">
+        <div class="card-row" style="max-width:700px;margin:0 auto;">
             <div class="card-col">
                 <div class="n orange xs">📋 View Assigned Works</div>
                 <div class="ad xs"></div>
@@ -784,6 +849,18 @@
                     </ul>
                 </div>
             </div>
+            <div class="card-col">
+                <div class="n orange xs">🔍 IMEI Lookup <span class="tag new">v3.0</span></div>
+                <div class="ad xs"></div>
+                <div class="screen ol">
+                    <ul>
+                        <li>Search device by IMEI</li>
+                        <li>View model info & past repairs</li>
+                        <li>See current inventory status</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 16</div>
+            </div>
         </div>
 
         <div class="sp"></div>
@@ -795,29 +872,751 @@
 
 <div class="center"><div class="ad t"></div></div>
 
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--                    v3.0 NEW FLOWS SECTION                      -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section-divider">
+    <span>🆕 v3.0 — New Flows Below</span>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
 <!-- ═══════════════════════════════════════════ -->
-<!--  REMOVED FEATURES (v1.0 → v2.0)            -->
+<!--  FLOW 10 — BRANCH MANAGER DASHBOARD         -->
 <!-- ═══════════════════════════════════════════ -->
-<div class="sg" style="border-color:var(--rose);background:var(--rose-l);opacity:0.85;">
-    <div class="gl" style="background:var(--rose-l);border-color:var(--rose);color:var(--rose);">Removed in v2.0 (From v1.0)</div>
+<div class="sg new-flow">
+    <div class="gl">Flow 10 — Branch Manager Dashboard &amp; Controls 🆕</div>
     <div class="col">
-        <div class="note" style="color:var(--rose);font-weight:600;font-size:0.75rem;margin-bottom:10px;">These features have been removed from the MVP to simplify the project</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;">
-            <div class="n rose xs" style="text-decoration:line-through;">💰 Auto Profit Calculation</div>
-            <div class="n rose xs" style="text-decoration:line-through;">📈 Sales / Revenue Tracking</div>
-            <div class="n rose xs" style="text-decoration:line-through;">💳 Cash / Bank / Credit Split</div>
-            <div class="n rose xs" style="text-decoration:line-through;">📊 Branch-wise Profit Reports</div>
-            <div class="n rose xs" style="text-decoration:line-through;">👨‍🔧 Technician Performance Report</div>
-            <div class="n rose xs" style="text-decoration:line-through;">🔩 Parts Usage Report</div>
-            <div class="n rose xs" style="text-decoration:line-through;">📊 Excel Export</div>
-            <div class="n rose xs" style="text-decoration:line-through;">📄 PDF Export</div>
-            <div class="n rose xs" style="text-decoration:line-through;">💾 Data Backup Module</div>
-            <div class="n rose xs" style="text-decoration:line-through;">🛡️ Audit Log</div>
-            <div class="n rose xs" style="text-decoration:line-through;">📋 Daily Closing Report</div>
-            <div class="n rose xs" style="text-decoration:line-through;">💵 Add Charges (Labor/Expenses)</div>
-            <div class="n rose xs" style="text-decoration:line-through;">💳 Record Payment</div>
+        <div class="n teal">🏪 Branch Manager Logs In<div class="sub">Main Branch or Sub-Branch Manager</div></div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Branch<br>Type?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:900px;margin:0 auto;">
+            <!-- MAIN BRANCH -->
+            <div class="card-col wide">
+                <div class="tag" style="background:var(--teal-l);color:var(--teal);font-size:0.7rem;">🏪 MAIN BRANCH MANAGER</div>
+                <div class="ad xs"></div>
+                <div class="n teal sm">Main Branch Dashboard</div>
+                <div class="ad xs"></div>
+                <div class="screen tl">
+                    <div class="st">Full Access — All Branches</div>
+                    <ul>
+                        <li>Own branch full control (jobs, parts, models)</li>
+                        <li>📊 Cross-branch sales & revenue view</li>
+                        <li>📈 Per-branch sales breakdown & drill-down</li>
+                        <li>💰 Set profit margin per device model (own + global)</li>
+                        <li>📦 Inventory oversight — all branches</li>
+                        <li>👥 Staff activity & commissions (all branches)</li>
+                        <li>🧾 Daily / weekly / monthly sales reports</li>
+                    </ul>
+                </div>
+                <div class="cn">→ Pricing: Flow 14 · Sales Dashboard: Flow 15</div>
+            </div>
+
+            <!-- SUB-BRANCH -->
+            <div class="card-col wide">
+                <div class="tag" style="background:var(--green-l);color:#15803d;font-size:0.7rem;">🏢 SUB-BRANCH MANAGER</div>
+                <div class="ad xs"></div>
+                <div class="n green sm">Sub-Branch Dashboard</div>
+                <div class="ad xs"></div>
+                <div class="screen gl">
+                    <div class="st">Own Branch Only</div>
+                    <ul>
+                        <li>All operations restricted to own sub-branch</li>
+                        <li>💰 Set profit margin per model (own branch only)</li>
+                        <li>📊 Own branch sales, revenue & profit view</li>
+                        <li>📦 Own branch inventory management</li>
+                        <li>👥 Staff commissions at own branch</li>
+                        <li>⛔ No cross-branch access</li>
+                    </ul>
+                </div>
+                <div class="cn">→ Pricing: Flow 14 · Sales Dashboard: Flow 15</div>
+            </div>
         </div>
-        <div class="cn" style="margin-top:12px;color:var(--g500);">These can be re-added in a future phase once the core service tracking workflow is stable.</div>
+
+        <div class="sp"></div>
+
+        <!-- Branch Manager menu options -->
+        <div class="note" style="font-weight:600;color:var(--teal);margin-bottom:8px;">Branch Manager Sidebar / Menu Options ↓</div>
+        <div class="card-row">
+            <div class="card-col compact">
+                <div class="n teal xs">📊 Dashboard</div>
+                <div class="cn">Sales overview</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n teal xs">📦 Inventory</div>
+                <div class="cn">→ Flow 12</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n teal xs">💰 Pricing</div>
+                <div class="cn">→ Flow 14</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n teal xs">📈 Sales Dashboard</div>
+                <div class="cn">→ Flow 15</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n teal xs">👥 Staff & Commission</div>
+                <div class="cn">→ Flow 14</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n teal xs">🔍 IMEI Lookup</div>
+                <div class="cn">→ Flow 16</div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp new-info" style="max-width:560px;">
+            <strong>🔒 Access Rule:</strong> Sub-Branch Managers CANNOT see data from other branches. Only the Main Branch Manager can view consolidated cross-branch data.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 11 — SALES STAFF DASHBOARD            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 11 — Sales Staff Dashboard &amp; Operations 🆕</div>
+    <div class="col">
+        <div class="n pink">🛒 Sales Staff Logs In<div class="sub">Phone sales operations — no access to repair/job card module</div></div>
+        <div class="ad"></div>
+        <div class="n gray sm">View Sales Staff Dashboard</div>
+        <div class="note">Sales Staff sees sidebar/menu with these options ↓</div>
+        <div class="ad s"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n pink sm">📦 Add to Inventory</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Add Phones to Stock</div>
+                    <ul>
+                        <li>Add new phones to inventory</li>
+                        <li>Add second-hand phones</li>
+                        <li>Enter IMEI, quantity, purchase price</li>
+                        <li>Set condition grade (for used)</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 12</div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">🛒 Record Sale</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Sell a Phone</div>
+                    <ul>
+                        <li>Select phone from inventory</li>
+                        <li>Select specific IMEI unit</li>
+                        <li>Review pricing (auto-calculated)</li>
+                        <li>Add optional commission (₹)</li>
+                        <li>Confirm sale → inventory deducted</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 13</div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">📋 My Sales History</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Own Sales Only</div>
+                    <ul>
+                        <li>View own sales transactions</li>
+                        <li>View commission totals</li>
+                        <li>Filter by date range</li>
+                        <li>Generate past receipts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n pink sm">🔍 IMEI Lookup</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Device Search</div>
+                    <ul>
+                        <li>Search by IMEI number</li>
+                        <li>See inventory status (Available/Sold)</li>
+                        <li>See past sale info if sold</li>
+                        <li>See repair history (own branch)</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 16</div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">🧾 Generate Receipt</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Sale Receipt</div>
+                    <ul>
+                        <li>Print or digital receipt</li>
+                        <li>After each completed sale</li>
+                        <li>Customer-safe pricing only</li>
+                    </ul>
+                </div>
+                <div class="cn">→ See Flow 17</div>
+            </div>
+            <div class="card-col">
+                <div class="n gray sm" style="border-style:dashed;">🔧 Job Card Module</div>
+                <div class="ad xs"></div>
+                <div class="screen" style="border-left:3px dashed var(--g300);opacity:0.6;">
+                    <div class="st" style="color:var(--rose);">⛔ No Access</div>
+                    <ul>
+                        <li>Cannot create job cards</li>
+                        <li>Cannot view repair records</li>
+                        <li>Service module hidden entirely</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp" style="max-width:520px;">
+            <strong>⚠️ Access Rule:</strong> Sales Staff CANNOT access the repair/service module. They can only manage phone inventory, record sales, and view own sales history. Pricing margins are <strong>view-only</strong>.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 12 — INVENTORY MANAGEMENT             -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 12 — Inventory Management Flow 🆕</div>
+    <div class="col">
+        <div class="n indigo">📦 Inventory Module<div class="sub">Track all phones in stock — new &amp; second-hand — per branch</div></div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Action?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row">
+            <div class="card-col wide">
+                <div class="n indigo sm">➕ Add Phone to Inventory</div>
+                <div class="ad xs"></div>
+                <div class="screen il">
+                    <div class="st">Phone Entry Form</div>
+                    <ul>
+                        <li>Phone Category: New / Second-Hand</li>
+                        <li>Brand (linked to device model list)</li>
+                        <li>Model (from master list)</li>
+                        <li>IMEI Number(s) — per unit</li>
+                        <li>Color / Variant (e.g. 128GB Black)</li>
+                        <li>Quantity Added</li>
+                        <li>Purchase Price (₹) per unit</li>
+                        <li>Condition Grade (New/Excellent/Good/Fair)</li>
+                        <li>Date Received (auto / editable)</li>
+                        <li>Supplier / Source (optional)</li>
+                        <li>Branch (auto-assigned)</li>
+                        <li>Notes (optional)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col wide">
+                <div class="n indigo sm">📋 View Inventory List</div>
+                <div class="ad xs"></div>
+                <div class="screen il">
+                    <div class="st">Stock Overview</div>
+                    <ul>
+                        <li>Model, Brand, Category columns</li>
+                        <li>Available / Sold / Total counts</li>
+                        <li>Purchase Price per unit</li>
+                        <li>Filter by: branch, brand, model</li>
+                        <li>Filter by: category (new/second-hand)</li>
+                        <li>Filter by: status (available/sold)</li>
+                        <li>IMEI search within inventory</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <!-- Inventory tracking logic -->
+        <div class="note" style="font-weight:600;color:var(--indigo);margin-bottom:8px;">Inventory Auto-Tracking Logic ↓</div>
+        <div class="card-row" style="max-width:800px;margin:0 auto;">
+            <div class="card-col compact">
+                <div class="n green xs">➕ Add Stock</div>
+                <div class="ad xs"></div>
+                <div class="n gray xs" style="font-size:0.6rem;">Available ↑</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n pink xs">🛒 Record Sale</div>
+                <div class="ad xs"></div>
+                <div class="n gray xs" style="font-size:0.6rem;">Available ↓ · IMEI → Sold</div>
+            </div>
+            <div class="card-col compact">
+                <div class="n amber xs">↩ Return / Reversal</div>
+                <div class="ad xs"></div>
+                <div class="n gray xs" style="font-size:0.6rem;">Available ↑ · IMEI → Available</div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp info" style="max-width:560px;">
+            <strong>💡 Example:</strong> Sales Staff adds 3× Samsung F22 → Stock: <strong>3 Available</strong>. Sells 1 unit → Stock auto-updates to <strong>2 Available</strong>. Sold unit's IMEI marked as "Sold" instantly.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 13 — PHONE SALES FLOW                 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 13 — Phone Sale: Step-by-Step Process 🆕</div>
+    <div class="col">
+        <div class="note" style="margin-bottom:10px;">This shows how a single phone sale is recorded from start to finish</div>
+
+        <div class="n pink pill">🛒 Sales Staff Starts New Sale</div>
+        <div class="ad"></div>
+
+        <!-- Step 1 -->
+        <div class="step-num pink-bg">1</div>
+        <div class="n indigo sm">📦 Select Phone from Inventory<div class="sub">Browse / search — filter by brand, model, category, branch</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 2 -->
+        <div class="step-num pink-bg">2</div>
+        <div class="n indigo sm">📱 Select Unit / IMEI<div class="sub">Pick specific handset by IMEI number</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 3 -->
+        <div class="step-num pink-bg">3</div>
+        <div class="n gray sm">Confirm Quantity Sold<div class="sub">Default 1 per IMEI; bulk possible for same model</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 4 -->
+        <div class="step-num pink-bg">4</div>
+        <div class="n teal sm">💰 Review Pricing<div class="sub">System shows: Purchase Price + Branch Margin = Base Price</div></div>
+        <div class="cn">→ Pricing set via Flow 14</div>
+        <div class="ad"></div>
+
+        <!-- Step 5 -->
+        <div class="step-num pink-bg">5</div>
+        <div class="n pink sm">💸 Add Staff Commission (Optional)<div class="sub">Enter commission amount in ₹ — can be ₹0</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 6 -->
+        <div class="step-num pink-bg">6</div>
+        <div class="n teal sm">✅ Final Price Confirmation<div class="sub">Final = Purchase + Margin + Commission (auto-calculated)</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 7 -->
+        <div class="step-num pink-bg">7</div>
+        <div class="n gray sm">👤 Record Customer Details<div class="sub">Name, phone number (optional for quick sales)</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 8 -->
+        <div class="step-num pink-bg">8</div>
+        <div class="n green pill">✅ Confirm Sale<div class="sub">Inventory auto-deducted · IMEI marked as Sold</div></div>
+        <div class="ad"></div>
+
+        <!-- Step 9 -->
+        <div class="step-num pink-bg">9</div>
+        <div class="n pink sm">🧾 Generate Receipt (Optional)<div class="sub">Print or digital receipt for customer</div></div>
+        <div class="cn">→ See Flow 17</div>
+
+        <div class="sp"></div>
+
+        <!-- Sale record fields -->
+        <div style="max-width:600px;width:100%;background:#fff;border:1.5px solid var(--pink);border-radius:10px;padding:14px 16px;">
+            <div style="font-size:0.72rem;font-weight:700;color:#be185d;margin-bottom:8px;">📝 Sale Transaction Record — Saved Fields</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <div class="n pink xs">Sale ID (auto)</div>
+                <div class="n pink xs">Phone Model & Brand</div>
+                <div class="n pink xs">IMEI Number</div>
+                <div class="n pink xs">Category (New/Used)</div>
+                <div class="n pink xs">Purchase Price ₹</div>
+                <div class="n pink xs">Branch Margin ₹</div>
+                <div class="n pink xs">Base Price ₹</div>
+                <div class="n pink xs">Staff Commission ₹</div>
+                <div class="n pink xs">Final Sale Price ₹</div>
+                <div class="n pink xs">Customer Name</div>
+                <div class="n pink xs">Customer Phone</div>
+                <div class="n pink xs">Sales Staff (auto)</div>
+                <div class="n pink xs">Branch (auto)</div>
+                <div class="n pink xs">Sale Date & Time</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 14 — PRICING & COMMISSION SYSTEM       -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 14 — Pricing &amp; Commission System 🆕</div>
+    <div class="col">
+        <div class="n teal">💰 Pricing Engine<div class="sub">Three-layer pricing chain — purchase + margin + commission = final price</div></div>
+        <div class="ad s"></div>
+
+        <!-- Formula Box -->
+        <div class="formula-box">
+            <div class="formula">
+                <span class="part" style="background:var(--indigo-l);color:#4338ca;">Purchase Price (₹)</span>
+                <span class="plus">+</span>
+                <span class="part" style="background:var(--teal-l);color:#0f766e;">Branch Profit Margin (₹)</span>
+                <span class="plus">+</span>
+                <span class="part" style="background:var(--pink-l);color:#be185d;">Staff Commission (₹)</span>
+                <span class="eq">=</span>
+                <span class="part" style="background:var(--green-l);color:#15803d;">Final Sale Price (₹)</span>
+            </div>
+            <div style="font-size:0.65rem;color:var(--g500);margin-top:8px;">
+                Set by Staff / Manager &nbsp;·&nbsp; Set by Branch Manager &nbsp;·&nbsp; Optional, set by Sales Staff &nbsp;·&nbsp; Auto-calculated
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <!-- Who sets what -->
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n indigo sm">💵 Purchase Price</div>
+                <div class="ad xs"></div>
+                <div class="screen il">
+                    <div class="st">Who Sets This</div>
+                    <ul>
+                        <li>Sales Staff OR Branch Manager</li>
+                        <li>Per unit / per model</li>
+                        <li>Reflects actual cost paid</li>
+                        <li>Set at time of inventory entry</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n teal sm">📊 Branch Profit Margin</div>
+                <div class="ad xs"></div>
+                <div class="screen tl">
+                    <div class="st">Branch Manager Only</div>
+                    <ul>
+                        <li>Set per device model, per branch</li>
+                        <li>Fixed amount in ₹</li>
+                        <li>Different branches can have different margins</li>
+                        <li>Effective from date tracked</li>
+                        <li>Margin history stored</li>
+                        <li>⚠️ Changes don't affect past sales</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">💸 Staff Commission</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Sales Staff (Optional)</div>
+                    <ul>
+                        <li>Per individual sale transaction</li>
+                        <li>Added at time of sale</li>
+                        <li>Can be ₹0 (no commission)</li>
+                        <li>Tracked separately from profit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <div class="imp success" style="max-width:600px;">
+            <strong>💡 Example:</strong> Samsung F22 purchase = ₹20,000. Branch margin = ₹4,000. Base price = ₹24,000. Staff commission = ₹500. <strong>Final sale price = ₹24,500.</strong> Branch profit = ₹4,000. Staff commission = ₹500 (tracked separately).
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp" style="max-width:600px;">
+            <strong>⚠️ Critical Rule:</strong> Changing the branch profit margin does <strong>NOT</strong> affect previously recorded sales. The margin at the time of each sale is saved permanently with that transaction.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 15 — SALES & PROFIT DASHBOARD          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 15 — Sales &amp; Profit Dashboard 🆕</div>
+    <div class="col">
+        <div class="n teal">📈 Sales & Profit Dashboard<div class="sub">Phone sales analytics — role-filtered visibility</div></div>
+        <div class="ad"></div>
+        <div class="dw"><div class="dia"><span>Branch<br>Type?</span></div></div>
+        <div class="sp"></div>
+
+        <div class="card-row" style="max-width:900px;margin:0 auto;">
+            <!-- Main Branch View -->
+            <div class="card-col wide">
+                <div class="tag" style="background:var(--teal-l);color:var(--teal);font-size:0.7rem;">🏪 MAIN BRANCH VIEW</div>
+                <div class="ad xs"></div>
+                <div class="screen tl">
+                    <div class="st">Consolidated — All 5 Branches</div>
+                    <ul>
+                        <li>📊 Total Sales (all branches) — day/week/month/custom</li>
+                        <li>💰 Total Profit (all branches) — sum of margins</li>
+                        <li>🏢 Per-Branch Sales Cards — units, revenue, profit each</li>
+                        <li>📱 Top Selling Models — ranked across all branches</li>
+                        <li>👥 Staff Commission Total — per branch & overall</li>
+                        <li>📦 Inventory Overview — stock per branch</li>
+                        <li>📈 Sales Trend Chart — visual chart over time</li>
+                        <li>🔄 Recent Sales Feed — live transactions list</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sub-Branch View -->
+            <div class="card-col wide">
+                <div class="tag" style="background:var(--green-l);color:#15803d;font-size:0.7rem;">🏢 SUB-BRANCH VIEW</div>
+                <div class="ad xs"></div>
+                <div class="screen gl">
+                    <div class="st">Own Branch Only</div>
+                    <ul>
+                        <li>📊 Own Branch Sales — day/week/month/custom</li>
+                        <li>💰 Own Branch Profit — margin earned</li>
+                        <li>👥 Staff Commissions at this branch</li>
+                        <li>📦 Inventory at own branch</li>
+                        <li>🔄 Recent Sales — own branch only</li>
+                        <li>📱 Top Selling Models — own branch</li>
+                        <li>⛔ No cross-branch data access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp info" style="max-width:600px;">
+            <strong>💡 Profit Definition:</strong> Branch Profit = Sum of (Branch Margin per sale). Staff Commission is tracked separately and is <strong>NOT</strong> included in Branch Profit. Dashboard shows both as distinct line items.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 16 — UNIVERSAL IMEI LOOKUP             -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 16 — Universal IMEI Device Lookup 🆕</div>
+    <div class="col">
+        <div class="n blue">🔍 IMEI Lookup — Global Search<div class="sub">Accessible from navigation header — all user roles</div></div>
+        <div class="ad"></div>
+        <div class="n blue sm">Enter IMEI Number in Search Bar</div>
+        <div class="ad"></div>
+        <div class="n gray sm">System Searches Across: Inventory · Repairs · Sales</div>
+        <div class="ad s"></div>
+
+        <!-- Results breakdown -->
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n blue sm">📱 Device Identity</div>
+                <div class="ad xs"></div>
+                <div class="screen bl">
+                    <ul>
+                        <li>Brand, Model, Color, Variant</li>
+                        <li>Category (New / Second-Hand)</li>
+                        <li>Condition Grade</li>
+                        <li>IMEI & registration date</li>
+                        <li>Branch it belongs to</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n indigo sm">📦 Inventory Status</div>
+                <div class="ad xs"></div>
+                <div class="screen il">
+                    <ul>
+                        <li>Status: Available / Sold / In Repair / Transferred</li>
+                        <li>Purchase info (Manager/Admin only)</li>
+                        <li>Current location (branch)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">🛒 Sale Info</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <ul>
+                        <li>If sold: sale date, branch, price</li>
+                        <li>Sales Staff name</li>
+                        <li>Purchase price (Manager/Admin only)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n orange sm">🔧 Repair History</div>
+                <div class="ad xs"></div>
+                <div class="screen ol">
+                    <ul>
+                        <li>All job cards for this IMEI</li>
+                        <li>Dates, problems, technician</li>
+                        <li>Service status per job</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <!-- Role access table -->
+        <div style="max-width:650px;width:100%;background:#fff;border:1.5px solid var(--g200);border-radius:10px;padding:14px 16px;">
+            <div style="font-size:0.72rem;font-weight:700;color:var(--g700);margin-bottom:8px;">👁️ What Each Role Can See in IMEI Lookup</div>
+            <table class="toggle-table">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Access Level</th>
+                        <th>What They See</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>👑 Super Admin</td><td class="on">Full Access</td><td>Everything — all branches</td></tr>
+                    <tr><td>🏪 Main Branch Manager</td><td class="on">Full Access</td><td>All device info — all branches</td></tr>
+                    <tr><td>🏢 Sub-Branch Manager</td><td style="color:var(--amber);font-weight:600;">Own Branch</td><td>Own branch info; flags if at other branches</td></tr>
+                    <tr><td>🛒 Sales Staff</td><td class="on">Access</td><td>Inventory status, sale info, own branch repairs</td></tr>
+                    <tr><td>🛠️ Technician</td><td class="on">Access</td><td>Device details, past repairs, inventory status</td></tr>
+                    <tr><td>👤 Tenant User</td><td class="on">Access</td><td>Device details, repair records, inventory status</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp info" style="max-width:520px;">
+            <strong>💡 UX Note:</strong> The IMEI lookup is accessible from a persistent search bar in the navigation header. No need to navigate to any specific module. Results are filtered by role permissions.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FLOW 17 — SALES RECEIPT GENERATION          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg new-flow">
+    <div class="gl">Flow 17 — Sales Receipt Generation 🆕</div>
+    <div class="col">
+        <div class="n pink">🧾 Phone Sale Receipt<div class="sub">Generated after a completed phone sale — print or digital</div></div>
+        <div class="ad s"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n pink sm">🏪 Shop Header</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <ul>
+                        <li>Shop name</li>
+                        <li>Branch name & address</li>
+                        <li>Phone number</li>
+                        <li>Logo (if configured)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">📋 Sale Reference</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <ul>
+                        <li>Sale ID</li>
+                        <li>Date & time of sale</li>
+                        <li>Sales Staff name</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">👤 Customer Details</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <ul>
+                        <li>Customer name</li>
+                        <li>Phone number (if provided)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+
+        <div class="card-row">
+            <div class="card-col">
+                <div class="n pink sm">📱 Device Details</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <ul>
+                        <li>Brand & model</li>
+                        <li>Color / variant</li>
+                        <li>Category (New / Second-Hand)</li>
+                        <li>Condition grade</li>
+                        <li>IMEI number</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">💰 Pricing Section</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <div class="st">Customer-Safe Pricing</div>
+                    <ul>
+                        <li>Selling Price (base)</li>
+                        <li>Commission (if shown)</li>
+                        <li>Total Amount</li>
+                        <li>⛔ Purchase price NOT shown</li>
+                        <li>⛔ Branch margin NOT shown</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-col">
+                <div class="n pink sm">💳 Payment & Footer</div>
+                <div class="ad xs"></div>
+                <div class="screen pkl">
+                    <ul>
+                        <li>Total amount paid</li>
+                        <li>Payment method (Cash/UPI/Card)</li>
+                        <li>Balance if any</li>
+                        <li>Warranty note (optional)</li>
+                        <li>Thank you message</li>
+                        <li>Return/exchange policy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="sp"></div>
+        <div class="imp" style="max-width:600px;">
+            <strong>🔒 Receipt Rule:</strong> The purchase price and branch profit margin are <strong>NEVER shown</strong> on the customer receipt. Only the final selling price appears. Full pricing breakdown is visible only to Branch Manager and Super Admin in the backend.
+        </div>
+    </div>
+</div>
+
+<div class="center"><div class="ad t"></div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  FUTURE FEATURES (Still removed)            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="sg" style="border-color:var(--g300);background:var(--g100);opacity:0.85;">
+    <div class="gl" style="background:var(--g100);border-color:var(--g300);color:var(--g500);">Future Phase — Not in v3.0</div>
+    <div class="col">
+        <div class="note" style="color:var(--g500);font-weight:600;font-size:0.75rem;margin-bottom:10px;">These features are planned for v4.0+ once core workflows are stable</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;">
+            <div class="n gray xs" style="text-decoration:line-through;">📊 Excel Export</div>
+            <div class="n gray xs" style="text-decoration:line-through;">📄 PDF Export</div>
+            <div class="n gray xs" style="text-decoration:line-through;">💾 Data Backup Module</div>
+            <div class="n gray xs" style="text-decoration:line-through;">🛡️ Audit Log</div>
+            <div class="n gray xs" style="text-decoration:line-through;">📋 Daily Closing Report</div>
+            <div class="n gray xs" style="text-decoration:line-through;">👨‍🔧 Technician Performance Report</div>
+        </div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;">
+            <div class="note" style="margin-top:4px;font-weight:600;color:#15803d;">✅ Re-added in v3.0 (were removed in v2.0):</div>
+        </div>
+        <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;">
+            <div class="n green xs">📈 Sales / Revenue Tracking</div>
+            <div class="n green xs">📊 Branch-wise Profit Reports</div>
+            <div class="n green xs">💰 Profit Calculation (Margin-based)</div>
+        </div>
+        <div class="cn" style="margin-top:12px;color:var(--g500);">Features listed above (struck-through) can be added in a future v4.0 phase.</div>
     </div>
 </div>
 
@@ -836,16 +1635,20 @@
                 <div class="ref-item"><div class="rl">Backend</div><div class="rv">Node.js / Django</div></div>
                 <div class="ref-item"><div class="rl">Database</div><div class="rv">PostgreSQL / Supabase</div></div>
                 <div class="ref-item"><div class="rl">Auth</div><div class="rv">JWT-based (Role-aware)</div></div>
+                <div class="ref-item"><div class="rl">Inventory</div><div class="rv">DB-level atomic transactions</div></div>
+                <div class="ref-item"><div class="rl">IMEI Search</div><div class="rv">Indexed composite column</div></div>
+                <div class="ref-item"><div class="rl">Receipts</div><div class="rv">React-to-print / Puppeteer</div></div>
                 <div class="ref-item"><div class="rl">Hosting</div><div class="rv">Cloud-based Deployment</div></div>
             </div>
         </div>
 
         <div style="flex:1;min-width:280px;">
-            <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">MVP Screens (10 Screens)</div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">All Screens (22 Screens Total)</div>
+            <div style="font-size:0.66rem;font-weight:600;color:var(--g500);margin-bottom:6px;">v2.0 Screens (Retained)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
                 <div class="n blue xs">① Login</div>
-                <div class="n purple xs">② Super Admin Dashboard</div>
-                <div class="n purple xs">③ Tenant Management</div>
+                <div class="n purple xs">② SA Dashboard</div>
+                <div class="n purple xs">③ Tenant Mgmt</div>
                 <div class="n purple xs">④ Feature Toggles</div>
                 <div class="n cyan xs">⑤ Tenant Dashboard</div>
                 <div class="n green xs">⑥ Add Service</div>
@@ -854,28 +1657,50 @@
                 <div class="n cyan xs">⑨ Parts Mgmt</div>
                 <div class="n cyan xs">⑩ Device Models</div>
                 <div class="n cyan xs">⑪ Sub-Branches</div>
+                <div class="n orange xs">⑫ Technician Dashboard</div>
+            </div>
+            <div style="font-size:0.66rem;font-weight:600;color:var(--indigo);margin-bottom:6px;">🆕 v3.0 Screens (New)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <div class="n pink xs">⑬ Sales Staff Dashboard</div>
+                <div class="n indigo xs">⑭ Add to Inventory</div>
+                <div class="n indigo xs">⑮ Inventory List</div>
+                <div class="n pink xs">⑯ Record Sale</div>
+                <div class="n teal xs">⑰ Pricing Settings</div>
+                <div class="n teal xs">⑱ Sales Dashboard (Main)</div>
+                <div class="n green xs">⑲ Sales Dashboard (Sub)</div>
+                <div class="n pink xs">⑳ Sales Receipt</div>
+                <div class="n blue xs">㉑ IMEI Lookup</div>
+                <div class="n teal xs">㉒ Commission Tracker</div>
             </div>
         </div>
     </div>
 
     <div style="margin-top:20px;">
-        <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">User Roles</div>
+        <div style="font-size:0.78rem;font-weight:700;color:var(--g700);margin-bottom:10px;">User Roles (6 Roles)</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-            <div style="flex:1;min-width:240px;background:var(--purple-l);border:1.5px solid var(--purple);border-radius:10px;padding:12px 16px;">
+            <div style="flex:1;min-width:200px;background:var(--purple-l);border:1.5px solid var(--purple);border-radius:10px;padding:12px 16px;">
                 <div style="font-size:0.75rem;font-weight:700;color:var(--purple);margin-bottom:4px;">👑 Super Admin</div>
                 <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Platform owner — full control over tenants, feature toggles, user quotas, account approvals</div>
             </div>
-            <div style="flex:1;min-width:240px;background:var(--cyan-l);border:1.5px solid var(--cyan);border-radius:10px;padding:12px 16px;">
-                <div style="font-size:0.75rem;font-weight:700;color:#0e7490;margin-bottom:4px;">🏪 Tenant Admin (Main Branch)</div>
-                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Shop owner/manager — create jobs, manage parts &amp; models, own shop data only. Can manage sub-branches.</div>
+            <div style="flex:1;min-width:200px;background:var(--teal-l);border:1.5px solid var(--teal);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#0f766e;margin-bottom:4px;">🏪 Branch Manager (Main) <span class="vb v3">v3.0</span></div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Main branch full control + cross-branch sales view + set pricing rules for all branches</div>
             </div>
-            <div style="flex:1;min-width:240px;background:var(--green-l);border:1.5px solid var(--green);border-radius:10px;padding:12px 16px;">
-                <div style="font-size:0.75rem;font-weight:700;color:#15803d;margin-bottom:4px;">🏢 Sub-Branch User</div>
-                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Branch staff — restricted to viewing and managing jobs only for their specific branch. Cannot manage other branches.</div>
+            <div style="flex:1;min-width:200px;background:var(--green-l);border:1.5px solid var(--green);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#15803d;margin-bottom:4px;">🏢 Sub-Branch Manager <span class="vb v3">v3.0</span></div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Own branch only — jobs, sales, pricing, inventory. No cross-branch access.</div>
             </div>
-            <div style="flex:1;min-width:240px;background:var(--orange-l);border:1.5px solid var(--orange);border-radius:10px;padding:12px 16px;">
-                <div style="font-size:0.75rem;font-weight:700;color:#c2410c;margin-bottom:4px;">🛠️ Technician User</div>
-                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Technician staff — restricted strictly to viewing their assigned jobs and updating status/notes. Cannot create jobs.</div>
+            <div style="flex:1;min-width:200px;background:var(--cyan-l);border:1.5px solid var(--cyan);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#0e7490;margin-bottom:4px;">👤 Tenant User</div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Shop staff — create jobs, manage parts & models, own shop data only</div>
+            </div>
+            <div style="flex:1;min-width:200px;background:var(--pink-l);border:1.5px solid var(--pink);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#be185d;margin-bottom:4px;">🛒 Sales Staff <span class="vb v3">v3.0</span></div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Phone sales — inventory, record sales, commission. No access to repair/job cards.</div>
+            </div>
+            <div style="flex:1;min-width:200px;background:var(--orange-l);border:1.5px solid var(--orange);border-radius:10px;padding:12px 16px;">
+                <div style="font-size:0.75rem;font-weight:700;color:#c2410c;margin-bottom:4px;">🛠️ Technician</div>
+                <div style="font-size:0.68rem;color:var(--g600);line-height:1.5;">Assigned jobs only — update status & notes + IMEI device lookup. Cannot create jobs.</div>
             </div>
         </div>
     </div>

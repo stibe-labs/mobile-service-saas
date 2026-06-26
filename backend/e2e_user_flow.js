@@ -143,8 +143,8 @@ async function request(method, endpoint, token, body = null) {
     // ----------------------------------------------------
     // PHASE 3: SUPER ADMIN VERIFICATION
     // ----------------------------------------------------
-    console.log('\\n[3] Logging in as Super Admin...');
-    const saToken = await login('superadmin', 'admin123');
+    console.log('\n[3] Logging in as Super Admin...');
+    const saToken = await login('stibe@superadmin', 'admin123');
     console.log('✔ Logged in as Super Admin');
 
     const saTenants = await request('GET', '/admin/tenants', saToken);

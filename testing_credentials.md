@@ -10,7 +10,7 @@ Use these credentials to log in at [http://localhost:3000/login](http://localhos
 
 ### 1. Super Admin Account
 *   **Role**: Platform Owner (controls all tenants, quotas, and feature toggles)
-*   **Username**: `superadmin`
+*   **Username**: `stibe@superadmin`
 *   **Password**: `admin123`
 *   **Permissions**: Full platform-level access, cannot create jobs directly (must be done via a tenant account).
 
@@ -25,7 +25,7 @@ Use these credentials to log in at [http://localhost:3000/login](http://localhos
 ## 🧪 Recommended Test Scenarios
 
 ### Scenario A: Super Admin Controls (Tenant & Feature Toggle Management)
-1. Log in as `superadmin` with password `admin123`.
+1. Log in as `stibe@superadmin` with password `admin123`.
 2. Navigate to the **Super Admin Dashboard**.
 3. Locate **Main Branch (BR1)** in the tenant list.
 4. Try toggling one of the features, for example:
@@ -43,3 +43,8 @@ Use these credentials to log in at [http://localhost:3000/login](http://localhos
     *   Add technician notes.
     *   Add parts used from the inventory catalog.
 6. Verify that the job status log updates automatically in the service history.
+(the password for all test accounts is password123):
+
+Sales Staff: sales_staff@test.com
+Sub-Branch Manager: sub_manager@test.com
+Main Manager: main_manager@test.com

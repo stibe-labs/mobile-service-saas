@@ -5,6 +5,7 @@ import AppLayout from '@/components/AppLayout';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import Link from 'next/link';
+import { LayoutDashboard, CircleDot, Clock, CheckCircle2, List, Building2 } from 'lucide-react';
 
 export default function TenantDashboard() {
   const { isFeatureEnabled, isTenantAdmin } = useAuth();
@@ -33,7 +34,7 @@ export default function TenantDashboard() {
     <AppLayout>
       <div className="page-header">
         <div>
-          <h1 className="page-title">⊞ Dashboard</h1>
+          <h1 className="page-title"><LayoutDashboard size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Dashboard</h1>
           <p className="page-subtitle">{isTenantAdmin ? "Today's overview across your company" : "Today's overview for your shop"}</p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -65,28 +66,28 @@ export default function TenantDashboard() {
         <>
           <div className="stat-grid">
             <div className="stat-card">
-              <div className="stat-icon blue">●</div>
+              <div className="stat-icon blue"><CircleDot size={24} /></div>
               <div>
                 <div className="stat-value">{data.today.today_total}</div>
                 <div className="stat-label">Today's Jobs</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon amber">•</div>
+              <div className="stat-icon amber"><Clock size={24} /></div>
               <div>
                 <div className="stat-value">{data.pending.count}</div>
                 <div className="stat-label">Pending Jobs</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon green">+</div>
+              <div className="stat-icon green"><CheckCircle2 size={24} /></div>
               <div>
                 <div className="stat-value">{data.today.today_delivered}</div>
                 <div className="stat-label">Delivered Today</div>
               </div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon purple">≡</div>
+              <div className="stat-icon purple"><List size={24} /></div>
               <div>
                 <div className="stat-value">{data.allTime.total_jobs}</div>
                 <div className="stat-label">All-Time Jobs</div>
@@ -94,43 +95,10 @@ export default function TenantDashboard() {
             </div>
           </div>
 
-          {/* Branch Overview */}
-          {data.branchStats && data.branchStats.length > 0 && (
-            <div className="card" style={{ marginBottom: '20px', padding: '0' }}>
-              <div className="card-header" style={{ padding: '20px 20px 0 20px', borderBottom: 'none' }}>
-                <div className="card-title">🏢 Branch Overview</div>
-              </div>
-              <div className="table-wrap" style={{ border: 'none', borderRadius: '0 0 var(--radius-lg) var(--radius-lg)' }}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Branch</th>
-                      <th>Today's Jobs</th>
-                      <th>Pending Jobs</th>
-                      <th>Delivered Today</th>
-                      <th>Total Jobs</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.branchStats.map(bs => (
-                      <tr key={bs.id}>
-                        <td><strong>{bs.name}</strong> <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({bs.branch_code})</span></td>
-                        <td>{bs.today_jobs}</td>
-                        <td><span className={`badge ${bs.pending_jobs > 0 ? 'badge-waiting_for_parts' : 'badge-received'}`}>{bs.pending_jobs}</span></td>
-                        <td><span className={`badge ${bs.delivered_today > 0 ? 'badge-delivered' : 'badge-received'}`}>{bs.delivered_today}</span></td>
-                        <td>{bs.total_jobs}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
           {/* Pending Jobs */}
           <div className="card">
             <div className="card-header">
-              <div className="card-title">• Pending Jobs</div>
+              <div className="card-title"><Clock size={20} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'text-bottom' }}/> Pending Jobs</div>
               <Link href="/services?status=received" className="btn btn-ghost btn-sm">View All →</Link>
             </div>
             {data.pending.recentJobs.length === 0 ? (
@@ -169,6 +137,39 @@ export default function TenantDashboard() {
               </div>
             )}
           </div>
+
+          {/* Branch Overview */}
+          {data.branchStats && data.branchStats.length > 0 && (
+            <div className="card" style={{ marginBottom: '20px', padding: '0' }}>
+              <div className="card-header" style={{ padding: '20px 20px 0 20px', borderBottom: 'none' }}>
+                <div className="card-title"><Building2 size={20} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'text-bottom' }}/> Branch Overview</div>
+              </div>
+              <div className="table-wrap" style={{ border: 'none', borderRadius: '0 0 var(--radius-lg) var(--radius-lg)' }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Branch</th>
+                      <th>Today's Jobs</th>
+                      <th>Pending Jobs</th>
+                      <th>Delivered Today</th>
+                      <th>Total Jobs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.branchStats.map(bs => (
+                      <tr key={bs.id}>
+                        <td><strong>{bs.name}</strong> <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({bs.branch_code})</span></td>
+                        <td>{bs.today_jobs}</td>
+                        <td><span className={`badge ${bs.pending_jobs > 0 ? 'badge-waiting_for_parts' : 'badge-received'}`}>{bs.pending_jobs}</span></td>
+                        <td><span className={`badge ${bs.delivered_today > 0 ? 'badge-delivered' : 'badge-received'}`}>{bs.delivered_today}</span></td>
+                        <td>{bs.total_jobs}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </>
       )}
     </AppLayout>

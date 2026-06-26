@@ -5,11 +5,9 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
-// Only Main Branch Admins can access these routes
-router.use(authenticate, requireRole('tenant_admin'));
-
 // ─── GET /api/tenant/branches ────────────────────────────
-router.get('/branches', async (req, res) => {
+// Accessible by tenant_admin AND main_branch_manager
+router.get('/branches', authenticate, requireRole('tenant_admin', 'main_branch_manager'), async (req, res) => {
   try {
     const tenantId = req.user.tenantId;
 
@@ -29,6 +27,9 @@ router.get('/branches', async (req, res) => {
     res.status(500).json({ error: 'Failed to list branches.' });
   }
 });
+
+// Only Tenant Admins can access subsequent routes
+router.use(authenticate, requireRole('tenant_admin'));
 
 // ─── POST /api/tenant/branches ───────────────────────────
 router.post('/branches', async (req, res) => {

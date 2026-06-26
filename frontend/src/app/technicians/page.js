@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AppLayout from '@/components/AppLayout';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
+import { Users, Plus, Trash2, Check, X, UserPlus } from 'lucide-react';
 
 export default function TechniciansPage() {
   const { isTenantAdmin } = useAuth();
@@ -12,6 +13,9 @@ export default function TechniciansPage() {
   const [branchFilter, setBranchFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Inline delete confirmation
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState(null);
   
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -47,14 +51,23 @@ export default function TechniciansPage() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this technician?')) return;
+  const handleDeletePrompt = (id) => {
+    setConfirmingDeleteId(id);
+  };
+
+  const confirmDelete = async (id) => {
     try {
       await api.deleteTechnician(id);
+      setConfirmingDeleteId(null);
       loadTechnicians(branchFilter);
     } catch (err) { 
       setError(err.error || 'Failed to delete technician'); 
+      setConfirmingDeleteId(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setConfirmingDeleteId(null);
   };
 
   return (
@@ -62,7 +75,7 @@ export default function TechniciansPage() {
       <AppLayout>
         <div className="page-header">
           <div>
-            <h1 className="page-title">⚙ Technicians</h1>
+            <h1 className="page-title"><Users size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Technicians</h1>
             <p className="page-subtitle">{isTenantAdmin ? 'Manage service technicians across company' : 'Manage service technicians for this branch'}</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -73,7 +86,7 @@ export default function TechniciansPage() {
               </select>
             )}
             <button className="btn btn-primary" onClick={() => { setForm({ name: '', email: '', password: '', branchId: '' }); setShowModal(true); }}>
-              + Add Technician
+              <Plus size={18} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }}/> Add Technician
             </button>
           </div>
         </div>
@@ -85,7 +98,7 @@ export default function TechniciansPage() {
         ) : technicians.length === 0 ? (
           <div className="card">
             <div className="empty-state">
-              <div className="empty-state-icon">⚙</div>
+              <div className="empty-state-icon"><Users size={48} color="var(--text-muted)" /></div>
               <div className="empty-state-text">No technicians added yet</div>
             </div>
           </div>
@@ -110,7 +123,15 @@ export default function TechniciansPage() {
                       <td>{tech.email}</td>
                       <td>{new Date(tech.created_at).toLocaleDateString()}</td>
                       <td>
-                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(tech.id)}>✕</button>
+                        {confirmingDeleteId === tech.id ? (
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Sure?</span>
+                            <button className="btn btn-sm btn-success" onClick={() => confirmDelete(tech.id)} style={{ padding: '4px', display: 'flex' }}><Check size={14} /></button>
+                            <button className="btn btn-sm btn-ghost" onClick={cancelDelete} style={{ padding: '4px', display: 'flex' }}><X size={14} /></button>
+                          </div>
+                        ) : (
+                          <button className="btn btn-danger btn-sm" onClick={() => handleDeletePrompt(tech.id)} style={{ padding: '6px', display: 'flex' }}><Trash2 size={16} /></button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -125,7 +146,7 @@ export default function TechniciansPage() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">+ Add New Technician</h2>
+            <h2 className="modal-title"><UserPlus size={24} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Add New Technician</h2>
             <form onSubmit={handleSubmit}>
               {isTenantAdmin && (
                 <div className="form-group">

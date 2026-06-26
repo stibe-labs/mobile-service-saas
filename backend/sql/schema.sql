@@ -9,7 +9,16 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ─── ENUMS ──────────────────────────────────────────────────
-CREATE TYPE user_role AS ENUM ('super_admin', 'tenant_admin', 'branch_user', 'technician', 'tenant_user');
+CREATE TYPE user_role AS ENUM (
+    'super_admin', 
+    'tenant_admin', 
+    'branch_user', 
+    'technician', 
+    'tenant_user', 
+    'sales_staff', 
+    'main_branch_manager', 
+    'sub_branch_manager'
+);
 
 CREATE TYPE service_status AS ENUM (
     'received',
@@ -52,6 +61,7 @@ CREATE TABLE users (
     full_name       VARCHAR(255),
     role            user_role NOT NULL DEFAULT 'tenant_user',
     tenant_id       UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    branch_id       UUID, -- Will be a FK to branches in Phase 2
     is_active       BOOLEAN NOT NULL DEFAULT TRUE,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -59,9 +69,8 @@ CREATE TABLE users (
     -- Super Admin has no tenant; Tenant User must have one
     CONSTRAINT user_role_check CHECK (
         (role = 'super_admin' AND tenant_id IS NULL AND branch_id IS NULL) OR
-        (role = 'tenant_admin' AND tenant_id IS NOT NULL AND branch_id IS NULL) OR
-        (role = 'branch_user' AND tenant_id IS NOT NULL AND branch_id IS NOT NULL) OR
-        (role = 'technician' AND tenant_id IS NOT NULL AND branch_id IS NOT NULL) OR
+        (role IN ('tenant_admin', 'main_branch_manager') AND tenant_id IS NOT NULL AND branch_id IS NULL) OR
+        (role IN ('branch_user', 'technician', 'sales_staff', 'sub_branch_manager') AND tenant_id IS NOT NULL AND branch_id IS NOT NULL) OR
         (role = 'tenant_user' AND tenant_id IS NOT NULL)
     )
 );
@@ -246,7 +255,7 @@ $$ LANGUAGE plpgsql;
 -- This hash is for 'admin123' with bcrypt rounds=10
 INSERT INTO users (email, password_hash, full_name, role, tenant_id)
 VALUES (
-    'superadmin@gmail.com',
+    'stibe@superadmin',
     '$2b$10$placeholder_hash_replace_after_running_seed_script',
     'Super Admin',
     'super_admin',
@@ -269,6 +278,57 @@ CREATE TABLE subscriptions (
 );
 CREATE INDEX idx_subscriptions_tenant ON subscriptions(tenant_id);
 
+-- ─── 13. INVENTORY (Phase 1) ────────────────────────────────
+CREATE TABLE inventory (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tenant_id       UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    branch_id       UUID, -- FK to branches to be added in Phase 2
+    brand_id        UUID REFERENCES brands(id) ON DELETE SET NULL,
+    model_id        UUID REFERENCES device_models(id) ON DELETE SET NULL,
+    category        VARCHAR(50) NOT NULL DEFAULT 'new', -- 'new' or 'second-hand'
+    condition_grade VARCHAR(50), 
+    imei_number     VARCHAR(50) NOT NULL,
+    quantity        INTEGER NOT NULL DEFAULT 1,
+    purchase_price  DECIMAL(10,2) NOT NULL DEFAULT 0,
+    status          VARCHAR(50) NOT NULL DEFAULT 'available', -- 'available', 'sold', 'returned'
+    supplier        VARCHAR(255),
+    notes           TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_inventory_imei ON inventory(imei_number);
+
+-- ─── 14. SALES (Phase 1) ────────────────────────────────────
+CREATE TABLE sales (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tenant_id       UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    branch_id       UUID,
+    inventory_id    UUID NOT NULL REFERENCES inventory(id) ON DELETE CASCADE,
+    imei_number     VARCHAR(50) NOT NULL,
+    customer_name   VARCHAR(255),
+    customer_phone  VARCHAR(50),
+    purchase_price  DECIMAL(10,2) NOT NULL DEFAULT 0,
+    branch_margin   DECIMAL(10,2) NOT NULL DEFAULT 0,
+    base_price      DECIMAL(10,2) NOT NULL DEFAULT 0,
+    staff_commission DECIMAL(10,2) NOT NULL DEFAULT 0,
+    final_price     DECIMAL(10,2) NOT NULL DEFAULT 0,
+    sales_staff_id  UUID NOT NULL REFERENCES users(id),
+    payment_method  VARCHAR(50) DEFAULT 'Cash',
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─── 15. STAFF COMMISSIONS (Phase 1) ────────────────────────
+CREATE TABLE staff_commissions (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tenant_id       UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    sales_id        UUID NOT NULL REFERENCES sales(id) ON DELETE CASCADE,
+    sales_staff_id  UUID NOT NULL REFERENCES users(id),
+    amount          DECIMAL(10,2) NOT NULL DEFAULT 0,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER trg_inventory_updated BEFORE UPDATE ON inventory FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
 -- ============================================================
--- SCHEMA COMPLETE — 11 tables, 5 enums, 5 triggers, 1 function
+-- SCHEMA COMPLETE — Phase 1 additions included
 -- ============================================================

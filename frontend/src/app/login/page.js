@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { TrendingUp, ArrowRight } from 'lucide-react';
 
 const features = [
   {
@@ -72,7 +73,7 @@ export default function LoginPage() {
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '480px' }}>
           <div style={{ marginBottom: '30px' }}>
             <div style={{ width: '48px', height: '48px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px', border: '1px solid rgba(255,255,255,0.2)' }}>
-              <span style={{ fontSize: '24px', color: 'var(--accent)' }}>📈</span>
+              <TrendingUp size={24} color="var(--accent)" />
             </div>
             
             <div style={{ minHeight: '140px' }}>
@@ -162,8 +163,8 @@ export default function LoginPage() {
               </div>
             </div>
             
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '16px', fontSize: '1.05rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', fontWeight: '600' }}>
-              Sign In →
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '16px', fontSize: '1.05rem', borderRadius: 'var(--radius-sm)', backgroundColor: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer', fontWeight: '600', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+              Sign In <ArrowRight size={18} />
             </button>
           </form>
 

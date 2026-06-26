@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt');
 const { query, pool } = require('./config/db');
 
 const SUPER_ADMIN = {
-  email: 'superadmin@gmail.com',
+  email: 'stibe@superadmin',
   password: 'admin123',
   fullName: 'Super Admin',
 };

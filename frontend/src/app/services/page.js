@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import Link from 'next/link';
 import Pagination from '@/components/Pagination';
+import { List, Plus, Search } from 'lucide-react';
 
 export default function ServicesPage() {
   const { isFeatureEnabled, isTenantAdmin } = useAuth();
@@ -61,11 +62,11 @@ export default function ServicesPage() {
     <AppLayout>
       <div className="page-header">
         <div>
-          <h1 className="page-title">≡ Service List</h1>
+          <h1 className="page-title"><List size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> Service List</h1>
           <p className="page-subtitle">{isTenantAdmin ? 'All job cards across your company' : 'All job cards for your shop'}</p>
         </div>
         {isFeatureEnabled('add_service') && (
-          <Link href="/services/new" className="btn btn-primary">+ Add Service</Link>
+          <Link href="/services/new" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Plus size={18}/> Add Service</Link>
         )}
       </div>
 
@@ -80,7 +81,7 @@ export default function ServicesPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ flex: 1 }}
             />
-            <button type="submit" className="btn btn-primary">⌕ Search</button>
+            <button type="submit" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Search size={18}/> Search</button>
           </form>
           {isTenantAdmin && (
             <select
@@ -114,7 +115,7 @@ export default function ServicesPage() {
       ) : services.length === 0 ? (
         <div className="card">
           <div className="empty-state">
-            <div className="empty-state-icon">≡</div>
+            <div className="empty-state-icon"><List size={48} color="var(--text-muted)"/></div>
             <div className="empty-state-text">No services found</div>
           </div>
         </div>

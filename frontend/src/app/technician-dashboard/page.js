@@ -7,6 +7,7 @@ import api from '@/lib/api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Pagination from '@/components/Pagination';
+import { Wrench, ArrowRight } from 'lucide-react';
 
 export default function TechnicianDashboardPage() {
   const { isTechnician, user } = useAuth();
@@ -44,8 +45,8 @@ export default function TechnicianDashboardPage() {
     <AppLayout>
       <div className="page-header">
         <div>
-          <h1 className="page-title">🛠️ My Works</h1>
-          <p className="page-subtitle">Welcome back, {user.full_name}. Here are your assigned jobs.</p>
+          <h1 className="page-title"><Wrench size={28} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }}/> My Works</h1>
+          <p className="page-subtitle">Welcome back, {user.full_name || user.fullName || user.email}. Here are your assigned jobs.</p>
         </div>
       </div>
 
@@ -75,7 +76,7 @@ export default function TechnicianDashboardPage() {
       ) : services.length === 0 ? (
         <div className="card">
           <div className="empty-state">
-            <div className="empty-state-icon">🛠️</div>
+            <div className="empty-state-icon"><Wrench size={48} color="var(--text-muted)" /></div>
             <div className="empty-state-text">No jobs assigned to you yet</div>
           </div>
         </div>
@@ -100,7 +101,7 @@ export default function TechnicianDashboardPage() {
                     <td style={{ maxWidth: '250px' }} className="truncate" title={svc.problem_description}>{svc.problem_description}</td>
                     <td><span className={`badge badge-${svc.status}`}>{svc.status?.replace(/_/g, ' ')}</span></td>
                     <td>
-                      <Link href={`/services/${svc.id}`} className="btn btn-ghost btn-sm">Update →</Link>
+                      <Link href={`/services/${svc.id}`} className="btn btn-ghost btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>Update <ArrowRight size={14} /></Link>
                     </td>
                   </tr>
                 ))}

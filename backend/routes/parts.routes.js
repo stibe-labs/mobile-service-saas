@@ -5,10 +5,10 @@ const { featureGate } = require('../middleware/featureGate');
 
 const router = express.Router();
 
-router.use(authenticate, requireRole('tenant_admin', 'branch_user'));
+router.use(authenticate, requireRole('tenant_admin', 'branch_user', 'main_branch_manager', 'sub_branch_manager'));
 
 const getTargetBranchId = (req, bodyBranchId) => {
-  if (req.user.role === 'branch_user') {
+  if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
     return req.user.branchId;
   }
   return bodyBranchId || null;
@@ -110,7 +110,7 @@ router.patch('/:id', featureGate('parts_management'), async (req, res) => {
 
     let whereClause = `WHERE id = $1 AND tenant_id = $2`;
     const checkValues = [id, tenantId];
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ` AND branch_id = $3`;
       checkValues.push(req.user.branchId);
     }
@@ -131,7 +131,7 @@ router.patch('/:id', featureGate('parts_management'), async (req, res) => {
     if (updates.length > 0) {
       values.push(id, tenantId);
       let updateWhere = `WHERE id = $${paramIndex++} AND tenant_id = $${paramIndex++}`;
-      if (req.user.role === 'branch_user') {
+      if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
         updateWhere += ` AND branch_id = $${paramIndex++}`;
         values.push(req.user.branchId);
       }
@@ -186,7 +186,7 @@ router.delete('/:id', featureGate('parts_management'), async (req, res) => {
     let whereClause = `WHERE id = $1 AND tenant_id = $2`;
     const values = [id, tenantId];
 
-    if (req.user.role === 'branch_user') {
+    if (['branch_user', 'sub_branch_manager'].includes(req.user.role)) {
       whereClause += ` AND branch_id = $3`;
       values.push(req.user.branchId);
     }

@@ -61,6 +61,10 @@ export function AuthProvider({ children }) {
       router.push('/admin');
     } else if (data.user.role === 'technician') {
       router.push('/technician-dashboard');
+    } else if (data.user.role === 'sales_staff') {
+      if (pathname === '/login' || pathname === '/') router.push('/sales-dashboard');
+    } else if (data.user.role === 'main_branch_manager') {
+      if (pathname === '/login' || pathname === '/') router.push('/main-dashboard');
     } else {
       router.push('/dashboard');
     }
@@ -92,6 +96,9 @@ export function AuthProvider({ children }) {
     isTenantAdmin: user?.role === 'tenant_admin',
     isBranchUser: user?.role === 'branch_user',
     isTechnician: user?.role === 'technician',
+    isSalesStaff: user?.role === 'sales_staff',
+    isSubBranchManager: user?.role === 'sub_branch_manager',
+    isMainBranchManager: user?.role === 'main_branch_manager',
   };
 
   return (
